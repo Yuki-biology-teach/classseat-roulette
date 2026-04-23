@@ -287,7 +287,8 @@
             <div class="setting-item"><label>列数（横）</label><input type="number" id="gridCols" value="6" min="1" max="12" oninput="rebuildLayoutEditor()"></div>
             <div class="setting-item"><label>行数（縦）</label><input type="number" id="gridRows" value="6" min="1" max="10" oninput="rebuildLayoutEditor()"></div>
           </div>
-          <p class="hint" style="margin:8px 0 6px;">クリックで席を有効／無効に切り替え</p>
+          <p class="hint" style="margin:8px 0 4px;">クリックで席を有効／無効に切り替え</p>
+          <div class="podium-label" style="margin-bottom:6px;font-size:0.75rem;padding:5px;">▲ 黒板 / 前方</div>
           <div id="layoutEditor" style="display:grid;gap:5px;margin-bottom:8px;"></div>
           <div style="display:flex;gap:10px;margin-top:4px;flex-wrap:wrap;">
             <p class="hint" id="totalSeatsHint">有効な席：36 席</p>
@@ -516,17 +517,15 @@ function renderLayoutEditor(cols,rows){
   const ed=document.getElementById('layoutEditor');
   ed.style.gridTemplateColumns=`repeat(${cols},36px)`;
   ed.innerHTML='';
-  // Render row by row (visual grid: row=top→bottom, col=left→right)
-  // seat numbering: col-major (left col first, top to bottom)
-  // But visual grid is row-major for display
-  // We'll display row-major, but number col-major
-  const seatNums={}; // key: "c,r" → seat number
+  // 番号付け：右列から左列へ、各列は上から下
+  const seatNums={};
   let n=1;
-  for(let c=0;c<cols;c++){
+  for(let c=cols-1;c>=0;c--){
     for(let r=0;r<rows;r++){
-      if(layoutGrid[c][r]) seatNums[`${c},${r}`]=n++;
+      if(layoutGrid[c]&&layoutGrid[c][r]) seatNums[`${c},${r}`]=n++;
     }
   }
+  // 表示：行ごとに左→右（視覚的な並び）
   for(let r=0;r<rows;r++){
     for(let c=0;c<cols;c++){
       const cell=document.createElement('div');
