@@ -222,22 +222,22 @@
   .inline-map-legend { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; font-size: 0.72rem; color: var(--muted); }
 
   /* ═══ DICE ═══ */
-  .dice-stage { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 16px 0; }
-  .dice-wrap { display: flex; gap: 32px; perspective: 400px; }
-  .dice-outer { display: flex; flex-direction: column; align-items: center; gap: 6px; }
-  .dice-label-txt { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.1em; }
-  .dice { width: 88px; height: 88px; position: relative; transform-style: preserve-3d; transform: rotateX(20deg) rotateY(20deg); transition: transform 0.1s; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.6)); }
-  .dice-face { position: absolute; width: 88px; height: 88px; border-radius: 14px; background: #f5f5f0; border: 2px solid #ddd; display: grid; place-items: center; }
-  .dice-face.front  { transform: translateZ(44px); }
-  .dice-face.back   { transform: rotateY(180deg) translateZ(44px); }
-  .dice-face.right  { transform: rotateY(90deg)  translateZ(44px); }
-  .dice-face.left   { transform: rotateY(-90deg) translateZ(44px); }
-  .dice-face.top    { transform: rotateX(90deg)  translateZ(44px); }
-  .dice-face.bottom { transform: rotateX(-90deg) translateZ(44px); }
-  .dots { display: grid; width: 68px; height: 68px; padding: 6px; gap: 4px; }
-  .dot { width: 14px; height: 14px; border-radius: 50%; background: #1a1a2e; }
+  .dice-stage { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 10px 0; }
+  .dice-arena { display: flex; gap: 48px; perspective: 600px; padding: 20px 30px 10px; }
+  .dice-outer { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .dice-label-txt { font-size: 0.78rem; color: var(--accent); font-weight: 700; letter-spacing: 0.15em; }
+  .dice { width: 100px; height: 100px; position: relative; transform-style: preserve-3d; transform: rotateX(20deg) rotateY(30deg); transition: transform 0.15s; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.7)); }
+  .dice-face { position: absolute; width: 100px; height: 100px; border-radius: 16px; background: linear-gradient(145deg,#ffffff,#e8e8e8); border: 2px solid #ccc; display: grid; place-items: center; box-shadow: inset 0 2px 6px rgba(255,255,255,0.8), inset 0 -2px 6px rgba(0,0,0,0.1); }
+  .dice-face.front  { transform: translateZ(50px); }
+  .dice-face.back   { transform: rotateY(180deg)  translateZ(50px); background: linear-gradient(145deg,#e0e0e0,#d0d0d0); }
+  .dice-face.right  { transform: rotateY(90deg)   translateZ(50px); background: linear-gradient(145deg,#f0f0f0,#e0e0e0); }
+  .dice-face.left   { transform: rotateY(-90deg)  translateZ(50px); background: linear-gradient(145deg,#f0f0f0,#e0e0e0); }
+  .dice-face.top    { transform: rotateX(90deg)   translateZ(50px); background: linear-gradient(145deg,#f8f8f8,#e8e8e8); }
+  .dice-face.bottom { transform: rotateX(-90deg)  translateZ(50px); background: linear-gradient(145deg,#d8d8d8,#c8c8c8); }
+  .dots { display: grid; width: 78px; height: 78px; padding: 8px; gap: 5px; }
+  .dot { width: 16px; height: 16px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #444, #111); box-shadow: 0 2px 4px rgba(0,0,0,0.4); }
   .dots-1 { grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr 1fr 1fr; }
-  .dots-1 .dot:nth-child(1) { grid-column:2; grid-row:2; }
+  .dots-1 .dot { grid-column:2; grid-row:2; }
   .dots-2 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
   .dots-3 { grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr 1fr 1fr; }
   .dots-3 .dot:nth-child(1){grid-column:1;grid-row:1} .dots-3 .dot:nth-child(2){grid-column:2;grid-row:2} .dots-3 .dot:nth-child(3){grid-column:3;grid-row:3}
@@ -245,44 +245,57 @@
   .dots-5 { grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr 1fr 1fr; }
   .dots-5 .dot:nth-child(1){grid-column:1;grid-row:1} .dots-5 .dot:nth-child(2){grid-column:3;grid-row:1} .dots-5 .dot:nth-child(3){grid-column:2;grid-row:2} .dots-5 .dot:nth-child(4){grid-column:1;grid-row:3} .dots-5 .dot:nth-child(5){grid-column:3;grid-row:3}
   .dots-6 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr 1fr; }
-  @keyframes diceRoll { 0%{transform:rotateX(0deg) rotateY(0deg)} 25%{transform:rotateX(180deg) rotateY(90deg)} 50%{transform:rotateX(90deg) rotateY(270deg)} 75%{transform:rotateX(270deg) rotateY(180deg)} 100%{transform:rotateX(360deg) rotateY(360deg)} }
-  .dice.rolling { animation: diceRoll 0.3s linear infinite; }
+  .dice-shadow { width: 90px; height: 20px; background: radial-gradient(ellipse, rgba(0,0,0,0.5) 0%, transparent 70%); border-radius: 50%; margin-top: 4px; transition: all 0.3s; }
+  .dice-floor { width: 100%; height: 2px; background: linear-gradient(90deg, transparent, rgba(240,192,64,0.3), transparent); margin-top: 4px; }
+  @keyframes diceRoll3d {
+    0%   { transform: rotateX(0deg)   rotateY(0deg)   rotateZ(0deg); }
+    25%  { transform: rotateX(200deg) rotateY(120deg) rotateZ(90deg); }
+    50%  { transform: rotateX(90deg)  rotateY(270deg) rotateZ(180deg); }
+    75%  { transform: rotateX(310deg) rotateY(180deg) rotateZ(270deg); }
+    100% { transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg); }
+  }
+  .dice.rolling { animation: diceRoll3d 0.25s linear infinite; }
+  .dice.rolling + .dice-shadow { opacity: 0.2; transform: scaleX(0.5); }
 
   /* ═══ GACHA ═══ */
-  .gacha-stage { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 8px 0; }
-  .gacha-capsule-row { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; max-width: 320px; max-height: 100px; overflow: hidden; }
-  .g-cap { width: 32px; height: 32px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); cursor: default; transition: all 0.3s; position: relative; overflow: hidden; }
-  .g-cap::before { content:''; position:absolute; top:0; left:0; right:0; height:50%; background: rgba(255,255,255,0.25); border-radius: 50% 50% 0 0; }
-  .g-cap.gone { opacity: 0.15; transform: scale(0.7); }
-  @keyframes capsuleRoll { 0%{transform:translateX(-60px) translateY(-20px) rotate(-180deg);opacity:0} 60%{transform:translateX(10px) translateY(5px) rotate(20deg)} 100%{transform:translateX(0) translateY(0) rotate(0deg);opacity:1} }
-  .g-cap-rolling { animation: capsuleRoll 0.6s ease forwards; }
-  .gacha-result-cap { width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 900; color: #1a1a2e; box-shadow: 0 6px 24px rgba(0,0,0,0.5); position: relative; overflow: hidden; }
-  .gacha-result-cap::before { content:''; position:absolute; top:0; left:0; right:0; height:50%; background: rgba(255,255,255,0.3); border-radius: 50% 50% 0 0; }
-  .gacha-result-cap span { position: relative; z-index: 1; }
+  .gacha-stage { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; padding: 4px 0; }
+  .gacha-capsule-shelf { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; padding: 12px; background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: 12px; max-width: 320px; min-height: 60px; }
+  .g-cap { width: 44px; height: 44px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.3); cursor: default; transition: all 0.4s; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.4), inset 0 -2px 4px rgba(0,0,0,0.2); }
+  .g-cap::before { content:''; position:absolute; top:3px; left:6px; width:40%; height:35%; background:rgba(255,255,255,0.45); border-radius:50%; filter:blur(2px); }
+  .g-cap-num { position:absolute; bottom:4px; left:0; right:0; text-align:center; font-size:0.6rem; font-weight:900; color:rgba(255,255,255,0.9); text-shadow:0 1px 2px rgba(0,0,0,0.5); }
+  .g-cap.gone { opacity: 0; transform: scale(0) rotate(180deg); pointer-events:none; }
+  .gacha-chute { display:flex; flex-direction:column; align-items:center; gap:4px; }
+  .gacha-chute-label { font-size:0.72rem; color:var(--muted); letter-spacing:0.1em; }
+  .gacha-result-area { min-height:70px; display:flex; align-items:center; justify-content:center; }
+  @keyframes capsuleOut { 0%{transform:translateY(-30px) rotate(-90deg) scale(0.5);opacity:0} 60%{transform:translateY(6px) rotate(10deg) scale(1.1)} 100%{transform:translateY(0) rotate(0deg) scale(1);opacity:1} }
+  .gacha-result-cap { width:70px; height:70px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.95rem; font-weight:900; color:#fff; box-shadow:0 8px 24px rgba(0,0,0,0.5), inset 0 -3px 6px rgba(0,0,0,0.2); position:relative; overflow:hidden; animation:capsuleOut 0.6s ease; }
+  .gacha-result-cap::before { content:''; position:absolute; top:5px; left:10px; width:38%; height:32%; background:rgba(255,255,255,0.4); border-radius:50%; filter:blur(3px); }
+  .gacha-result-cap span { position:relative; z-index:1; text-shadow:0 1px 3px rgba(0,0,0,0.4); }
 
   /* ═══ BLACKJACK ═══ */
   .bj-layout { display: grid; grid-template-columns: 1fr 300px; gap: 16px; align-items: start; }
   @media(max-width:860px){ .bj-layout { grid-template-columns: 1fr; } }
-  .bj-main { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+  .bj-main { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }
+  .bj-rules-hint { font-size: 0.75rem; color: var(--muted); text-align: center; padding: 8px 14px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; max-width: 500px; line-height: 1.6; }
   .bj-table { width: 100%; background: rgba(0,80,40,0.2); border: 1px solid rgba(0,160,80,0.25); border-radius: 16px; padding: 14px; min-height: 160px; }
   .bj-players { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
   .bj-player { background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 10px; padding: 8px 12px; min-width: 90px; text-align: center; transition: all 0.3s; }
-  .bj-player.active-player { border-color: var(--accent); background: rgba(240,192,64,0.12); box-shadow: 0 0 12px rgba(240,192,64,0.3); }
-  .bj-player.bust { border-color: #e06060; opacity: 0.5; }
-  .bj-player.standing { border-color: var(--accent3); background: rgba(64,192,224,0.08); }
+  .bj-player.active-player { border-color: var(--accent); background: rgba(240,192,64,0.12); box-shadow: 0 0 14px rgba(240,192,64,0.3); }
+  .bj-player.kept { border-color: var(--accent3); background: rgba(64,192,224,0.08); }
+  .bj-player.redrawn { border-color: #e05a20; background: rgba(224,90,32,0.08); }
   .bj-player.done-bj { border-color: var(--fixed); background: rgba(64,224,128,0.1); }
-  .bj-player-name { font-size: 0.75rem; font-weight: 700; margin-bottom: 5px; }
+  .bj-player-name { font-size: 0.75rem; font-weight: 700; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 90px; }
   .bj-cards { display: flex; gap: 3px; justify-content: center; flex-wrap: wrap; margin-bottom: 3px; }
-  .bj-card { width: 26px; height: 36px; border-radius: 4px; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 900; color: #1a1a2e; box-shadow: 0 2px 5px rgba(0,0,0,0.4); }
+  .bj-card { width: 26px; height: 38px; border-radius: 4px; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 900; color: #1a1a2e; box-shadow: 0 2px 5px rgba(0,0,0,0.4); flex-direction: column; line-height: 1; }
   .bj-card.red { color: #cc2222; }
-  .bj-card.back { background: linear-gradient(135deg,#1e3a6e,#3a5298); }
   .bj-score { font-size: 0.82rem; font-weight: 700; color: var(--accent); }
-  .bj-tag { font-size: 0.62rem; color: var(--muted); margin-top: 2px; }
-  .bj-seat-input { display: flex; align-items: center; gap: 4px; margin-top: 5px; }
+  .bj-round-scores { font-size: 0.65rem; color: var(--muted); margin-top: 2px; }
+  .bj-tag { font-size: 0.6rem; color: var(--muted); margin-top: 1px; }
+  .bj-seat-input { display: flex; align-items: center; gap: 4px; margin-top: 5px; justify-content: center; }
   .bj-seat-input input { width: 52px; padding: 3px 6px; border-radius: 6px; border: 1px solid var(--border); background: rgba(0,0,0,0.3); color: var(--text); font-size: 0.72rem; font-family: 'Noto Sans JP',sans-serif; text-align: center; }
-  .bj-seat-input button { padding: 3px 7px; border-radius: 5px; border: 1px solid var(--accent); background: transparent; color: var(--accent); font-size: 0.65rem; cursor: pointer; transition: all 0.15s; }
+  .bj-seat-input button { padding: 3px 7px; border-radius: 5px; border: 1px solid var(--accent); background: transparent; color: var(--accent); font-size: 0.65rem; cursor: pointer; transition: all 0.15s; font-family: inherit; }
   .bj-seat-input button:hover { background: var(--accent); color: #000; }
-  .bj-controls { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }
+  .bj-controls { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; }
   .bj-status { font-size: 0.88rem; color: var(--text); text-align: center; }
   .bj-btn-row { display: flex; gap: 12px; }
   .bj-rank-list { display: flex; flex-direction: column; gap: 4px; max-height: 420px; overflow-y: auto; }
@@ -562,9 +575,10 @@
       <div class="wheel-container">
         <div class="current-turn-badge" id="diceTurnBadge">—</div>
         <div class="dice-stage">
-          <div class="dice-wrap">
+          <div class="dice-arena">
             <div class="dice-outer">
-              <div class="dice" id="dice1" style="transform:rotateX(20deg) rotateY(20deg)">
+              <div class="dice-label-txt">列</div>
+              <div class="dice" id="dice1">
                 <div class="dice-face front"><div class="dots dots-1"><div class="dot"></div></div></div>
                 <div class="dice-face back"><div class="dots dots-6"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
                 <div class="dice-face right"><div class="dots dots-3"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
@@ -572,10 +586,11 @@
                 <div class="dice-face top"><div class="dots dots-5"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
                 <div class="dice-face bottom"><div class="dots dots-2"><div class="dot"></div><div class="dot"></div></div></div>
               </div>
-              <div class="dice-label-txt">列</div>
+              <div class="dice-shadow"></div>
             </div>
             <div class="dice-outer">
-              <div class="dice" id="dice2" style="transform:rotateX(20deg) rotateY(20deg)">
+              <div class="dice-label-txt">行</div>
+              <div class="dice" id="dice2">
                 <div class="dice-face front"><div class="dots dots-1"><div class="dot"></div></div></div>
                 <div class="dice-face back"><div class="dots dots-6"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
                 <div class="dice-face right"><div class="dots dots-3"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
@@ -583,9 +598,10 @@
                 <div class="dice-face top"><div class="dots dots-5"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
                 <div class="dice-face bottom"><div class="dots dots-2"><div class="dot"></div><div class="dot"></div></div></div>
               </div>
-              <div class="dice-label-txt">行</div>
+              <div class="dice-shadow"></div>
             </div>
           </div>
+          <div class="dice-floor"></div>
         </div>
         <div class="spin-result">
           <div class="result-label">RESULT</div>
@@ -621,9 +637,11 @@
       <div class="wheel-container">
         <div class="current-turn-badge" id="gachaTurnBadge">—</div>
         <div class="gacha-stage">
-          <div class="gacha-capsule-row" id="gachaCapsules"></div>
-          <div style="margin:8px 0;font-size:0.75rem;color:var(--muted);">↓ 転がり出る</div>
-          <div id="gachaResultCap" style="min-height:80px;display:flex;align-items:center;justify-content:center;"></div>
+          <div class="gacha-capsule-shelf" id="gachaCapsules"></div>
+          <div class="gacha-chute">
+            <div class="gacha-chute-label">▼ 転がり出る</div>
+            <div id="gachaResultCap" class="gacha-result-area"></div>
+          </div>
         </div>
         <div class="spin-result">
           <div class="result-label">RESULT</div>
@@ -658,18 +676,21 @@
     <div class="bj-layout">
       <div class="bj-main">
         <div class="current-turn-badge" id="bjPhaseBadge">準備中</div>
+        <div class="bj-rules-hint">🃏 2枚配られる → 1回だけ引き直し可 → 21に近いほど高スコア → 2回の合計スコアで順位決定（同率は1回目優先）</div>
         <div class="bj-table">
           <div class="bj-players" id="bjPlayers"></div>
         </div>
         <div class="bj-controls">
           <div id="bjStatus" class="bj-status">「カードを配る」を押してください</div>
           <div class="bj-btn-row" id="bjBtnRow" style="display:none;">
-            <button class="btn-spin" id="btnBjHit" onclick="bjHit()" style="font-size:0.9rem;padding:10px 28px;">HIT（引く）</button>
-            <button class="btn-spin" id="btnBjStand" onclick="bjStand()" style="font-size:0.9rem;padding:10px 28px;border-color:var(--accent3);color:var(--accent3);">STAND（止まる）</button>
+            <button class="btn-spin" id="btnBjKeep" onclick="bjKeep()" style="font-size:0.9rem;padding:10px 24px;border-color:var(--accent3);color:var(--accent3);">✋ このまま</button>
+            <button class="btn-spin" id="btnBjRedraw" onclick="bjRedraw()" style="font-size:0.9rem;padding:10px 24px;">🔄 引き直し</button>
           </div>
-          <button class="btn-spin" id="btnBjStart" onclick="bjStart()" disabled style="margin-top:4px;">🃏 カードを配る</button>
+          <button class="btn-spin" id="btnBjStart" onclick="bjStart()" disabled style="margin-top:4px;">🃏 第1回を配る</button>
+          <button class="btn-spin" id="btnBjRound2" onclick="bjStartRound2()" style="display:none;margin-top:4px;border-color:var(--accent3);color:var(--accent3);">🃏 第2回を配る</button>
+          <button class="btn-spin" id="btnBjFinalize" onclick="bjFinalize()" style="display:none;margin-top:4px;">🏆 順位確定して席選択へ</button>
         </div>
-        <div style="width:100%;max-width:400px;">
+        <div style="width:100%;max-width:440px;">
           <div class="progress-bar-wrap"><div class="progress-bar-fill" id="bjProgressFill" style="width:0%"></div></div>
           <div class="progress-text" id="bjProgressText">0 / 0 席 確定</div>
         </div>
@@ -1245,31 +1266,30 @@ function buildGachaCapsules(){
     const c=document.createElement('div');
     c.className='g-cap';c.id=`gcap-${n}`;
     c.style.background=gachaState.capColors[n]||'#ff6060';
-    c.title=`${n}番席`;
-    area.appendChild(c);
+    const num=document.createElement('div');num.className='g-cap-num';num.textContent=n;
+    c.appendChild(num);area.appendChild(c);
   });
 }
 function doGacha(){
   if(gachaState.idx>=gachaState.ordered.length)return;
   const btn=document.getElementById('btnGacha');btn.disabled=true;
   const avail=gachaState.avail;if(!avail.length){btn.disabled=false;return;}
-  const pick=avail[Math.floor(Math.random()*avail.length)];
-  // Shake all capsules
-  const caps=document.querySelectorAll('.g-cap:not(.gone)');
-  caps.forEach(c=>{c.style.animation='none';setTimeout(()=>c.style.animation='',10);});
+  // Shake all remaining capsules
+  document.querySelectorAll('.g-cap:not(.gone)').forEach(c=>{
+    let shakes=0;
+    const iv=setInterval(()=>{
+      c.style.transform=`translate(${(Math.random()-.5)*6}px,${(Math.random()-.5)*4}px) rotate(${(Math.random()-.5)*8}deg)`;
+      if(++shakes>8){clearInterval(iv);c.style.transform='';}
+    },50);
+  });
   setTimeout(()=>{
-    // Roll out the picked capsule
+    const pick=avail[Math.floor(Math.random()*avail.length)];
     const pickedEl=document.getElementById(`gcap-${pick}`);
-    if(pickedEl){
-      pickedEl.classList.add('g-cap-rolling');
-      setTimeout(()=>pickedEl.classList.add('gone'),500);
-    }
-    // Show result capsule
+    if(pickedEl) pickedEl.classList.add('gone');
     const resArea=document.getElementById('gachaResultCap');resArea.innerHTML='';
     const big=document.createElement('div');big.className='gacha-result-cap';
     big.style.background=gachaState.capColors[pick]||'#ff6060';
     big.innerHTML=`<span>${pick}番</span>`;
-    big.style.animation='seatPop 0.5s ease';
     resArea.appendChild(big);
     const student=gachaState.ordered[gachaState.idx];
     gachaState.assigned[pick]=student;
@@ -1280,7 +1300,7 @@ function doGacha(){
     fillSeatAll(pick,student,false);
     updateGachaUI();
     if(gachaState.idx<gachaState.ordered.length)btn.disabled=false;
-  },400);
+  },500);
 }
 function updateGachaUI(){
   const s=gachaState;
@@ -1294,14 +1314,19 @@ function updateGachaUI(){
   updateModeQueue('gachaQueueList','gachaQueueNow',s.ordered,s.idx,s.assigned,s.fixed);
 }
 
-// ─── BLACKJACK ───
+// ─── BLACKJACK (2-round, redraw-once) ───
 let bjState={};
 const BJ_SUITS=['♠','♥','♦','♣'];
 const BJ_VALS=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
 function bjCardVal(v){return v==='A'?11:['J','Q','K'].includes(v)?10:parseInt(v);}
-function bjScore(cards){
-  let s=cards.reduce((a,c)=>a+bjCardVal(c.val),0),aces=cards.filter(c=>c.val==='A').length;
-  while(s>21&&aces-->0)s-=10;return s;
+function bjRawScore(cards){
+  let s=cards.reduce((a,c)=>a+bjCardVal(c.val),0);
+  let ac=cards.filter(c=>c.val==='A').length;
+  while(s>21&&ac-->0)s-=10;return s;
+}
+function bjPointScore(cards){
+  const s=bjRawScore(cards);
+  return s>21?0:21-Math.abs(21-s);
 }
 function makeDeck(){
   const d=[];
@@ -1311,73 +1336,100 @@ function makeDeck(){
 function startBlackjack(names,fixed,activeSeats){
   const fixedNums=new Set(Object.keys(fixed).map(Number));
   const avail=activeSeats.map(s=>s.num).filter(n=>!fixedNums.has(n));
-  const players=names.map(n=>({name:n,cards:[],standing:false,bust:false,score:0,seat:null}));
-  bjState={names,fixed,activeSeats,avail:[...avail],assigned:{...Object.fromEntries(Object.entries(fixed).map(([k,v])=>[Number(k),v]))},players,deck:makeDeck(),phase:'start',currentActor:0};
+  const players=names.map(n=>({name:n,r1:[],r2:[],r1raw:0,r2raw:0,r1pts:0,r2pts:0,total:0,doneR1:false,doneR2:false,seat:null}));
+  bjState={names,fixed,activeSeats,avail:[...avail],assigned:{...Object.fromEntries(Object.entries(fixed).map(([k,v])=>[Number(k),v]))},players,deck:makeDeck(),phase:'start',round:0,currentActor:0,rankOrder:[]};
+  ['btnBjStart','btnBjRound2','btnBjFinalize'].forEach(id=>{
+    const el=document.getElementById(id);if(el){el.style.display='none';}
+  });
   document.getElementById('btnBjStart').disabled=false;
+  document.getElementById('btnBjStart').style.display='';
   document.getElementById('bjBtnRow').style.display='none';
-  document.getElementById('bjStatus').textContent='「カードを配る」を押してください';
+  document.getElementById('bjStatus').textContent='「第1回を配る」を押してください';
   document.getElementById('bjPhaseBadge').textContent='準備中';
   document.getElementById('bjProgressFill').style.width='0%';
   document.getElementById('bjProgressText').textContent=`0 / ${names.length} 席 確定`;
   document.getElementById('bjRankList').innerHTML='';
   renderBjPlayers();
 }
+function bjDealRound(round,afterDone){
+  bjState.players.forEach(p=>{if(round===1)p.r1=[];else p.r2=[];});
+  let di=0;
+  function deal(){
+    if(di>=bjState.players.length*2){afterDone();return;}
+    const pi=di%bjState.players.length;
+    const card=bjState.deck.pop();
+    if(round===1)bjState.players[pi].r1.push(card);
+    else bjState.players[pi].r2.push(card);
+    bjState.players[pi].r1raw=bjRawScore(bjState.players[pi].r1);
+    bjState.players[pi].r2raw=round===2?bjRawScore(bjState.players[pi].r2):0;
+    di++;renderBjPlayers();setTimeout(deal,100);
+  }
+  deal();
+}
 function bjStart(){
   document.getElementById('btnBjStart').style.display='none';
-  // Deal 2 cards to each player one by one with delay
-  let dealIdx=0;
-  const dealAll=()=>{
-    if(dealIdx>=bjState.players.length*2){
-      bjState.phase='playing';bjState.currentActor=0;
-      bjNextActor();return;
-    }
-    const pi=dealIdx%bjState.players.length;
-    bjState.players[pi].cards.push(bjState.deck.pop());
-    bjState.players[pi].score=bjScore(bjState.players[pi].cards);
-    dealIdx++;renderBjPlayers();
-    setTimeout(dealAll,120);
-  };
-  dealAll();
+  bjState.round=1;bjState.currentActor=0;
+  bjDealRound(1,()=>{bjState.phase='r1play';bjNextActor();});
+}
+function bjStartRound2(){
+  document.getElementById('btnBjRound2').style.display='none';
+  bjState.round=2;bjState.currentActor=0;
+  bjState.players.forEach(p=>p.doneR2=false);
+  bjDealRound(2,()=>{bjState.phase='r2play';bjNextActor();});
 }
 function bjNextActor(){
-  const p=bjState.players;
-  let next=-1;
+  const p=bjState.players;let next=-1;
   for(let i=bjState.currentActor;i<p.length;i++){
-    if(!p[i].standing&&!p[i].bust){next=i;break;}
+    if(bjState.round===1&&!p[i].doneR1){next=i;break;}
+    if(bjState.round===2&&!p[i].doneR2){next=i;break;}
   }
-  if(next===-1){bjReveal();return;}
+  if(next===-1){
+    document.getElementById('bjBtnRow').style.display='none';
+    if(bjState.round===1){
+      document.getElementById('bjStatus').textContent='第1回終了！第2回を配ってください。';
+      document.getElementById('bjPhaseBadge').textContent='第1回完了';
+      document.getElementById('btnBjRound2').style.display='';
+    } else {
+      document.getElementById('bjStatus').textContent='第2回終了！順位を確定してください。';
+      document.getElementById('bjPhaseBadge').textContent='第2回完了';
+      document.getElementById('btnBjFinalize').style.display='';
+    }
+    renderBjPlayers();return;
+  }
   bjState.currentActor=next;
   const pl=p[next];
-  document.getElementById('bjStatus').textContent=`${pl.name} のターン  スコア：${pl.score}`;
-  document.getElementById('bjPhaseBadge').textContent=`🃏 ${pl.name}`;
+  const sc=bjState.round===1?pl.r1raw:pl.r2raw;
+  document.getElementById('bjPhaseBadge').textContent=`🃏 ${pl.name}（第${bjState.round}回）`;
+  document.getElementById('bjStatus').textContent=`${pl.name}のスコア：${sc} — このまま or 引き直し？`;
   document.getElementById('bjBtnRow').style.display='flex';
   renderBjPlayers();
 }
-function bjHit(){
+function bjKeep(){
   const pl=bjState.players[bjState.currentActor];
-  pl.cards.push(bjState.deck.pop());pl.score=bjScore(pl.cards);
-  if(pl.score>21){
-    pl.bust=true;
-    document.getElementById('bjBtnRow').style.display='none';
-    renderBjPlayers();
-    setTimeout(()=>{bjState.currentActor++;bjNextActor();},700);
-  } else {
-    document.getElementById('bjStatus').textContent=`${pl.name} のターン  スコア：${pl.score}`;
-    renderBjPlayers();
-  }
-}
-function bjStand(){
-  bjState.players[bjState.currentActor].standing=true;
+  if(bjState.round===1){pl.r1pts=bjPointScore(pl.r1);pl.doneR1=true;}
+  else{pl.r2pts=bjPointScore(pl.r2);pl.doneR2=true;}
   document.getElementById('bjBtnRow').style.display='none';
-  renderBjPlayers();bjState.currentActor++;
-  setTimeout(bjNextActor,400);
+  bjState.currentActor++;renderBjPlayers();setTimeout(bjNextActor,250);
 }
-function bjReveal(){
+function bjRedraw(){
+  const pl=bjState.players[bjState.currentActor];
+  const nc=[bjState.deck.pop(),bjState.deck.pop()];
+  if(bjState.round===1){pl.r1=nc;pl.r1raw=bjRawScore(nc);pl.r1pts=bjPointScore(nc);pl.doneR1=true;}
+  else{pl.r2=nc;pl.r2raw=bjRawScore(nc);pl.r2pts=bjPointScore(nc);pl.doneR2=true;}
+  document.getElementById('bjBtnRow').style.display='none';
+  bjState.currentActor++;renderBjPlayers();setTimeout(bjNextActor,250);
+}
+function bjFinalize(){
+  document.getElementById('btnBjFinalize').style.display='none';
+  bjState.players.forEach(p=>{
+    p.r1pts=bjPointScore(p.r1);p.r2pts=bjPointScore(p.r2);
+    p.total=p.r1pts+p.r2pts;
+  });
+  bjState.rankOrder=[...bjState.players].sort((a,b)=>b.total-a.total||b.r1pts-a.r1pts);
   bjState.phase='picking';
   document.getElementById('bjPhaseBadge').textContent='席番号を入力して確定！';
-  document.getElementById('bjStatus').textContent='各自、入力欄に希望の席番号を入力してください';
-  renderBjPlayers();
-  renderBjRankList();
+  document.getElementById('bjStatus').textContent='合計スコア順に席番号を入力してください';
+  renderBjPlayers();renderBjRankList();
 }
 function bjConfirmSeat(playerName,inputEl){
   const sn=parseInt(inputEl.value);
@@ -1396,33 +1448,36 @@ function bjConfirmSeat(playerName,inputEl){
   if(bjState.avail.length===0)launchConfetti();
 }
 function renderBjPlayers(){
-  const c=document.getElementById('bjPlayers');c.innerHTML='';
+  const c=document.getElementById('bjPlayers');if(!c||!bjState.players)return;c.innerHTML='';
   bjState.players.forEach((pl,i)=>{
     const div=document.createElement('div');
     let cls='bj-player';
-    if(bjState.phase==='playing'&&i===bjState.currentActor)cls+=' active-player';
-    else if(pl.bust)cls+=' bust';
-    else if(pl.standing||bjState.phase==='picking')cls+=' standing';
-    if(pl.seat)cls=' bj-player done-bj';
+    const isActive=(bjState.round===1&&!pl.doneR1||bjState.round===2&&!pl.doneR2)&&i===bjState.currentActor&&(bjState.phase==='r1play'||bjState.phase==='r2play');
+    if(isActive)cls+=' active-player';
+    if(pl.seat)cls='bj-player done-bj';
     div.className=cls;
-    const cards=pl.cards.map(c=>`<div class="bj-card${c.red?' red':''}">${c.val}${c.suit}</div>`).join('');
+    const r1h=pl.r1.map(c=>`<div class="bj-card${c.red?' red':''}">${c.val}<span style="font-size:0.48rem">${c.suit}</span></div>`).join('');
+    const r2h=pl.r2&&pl.r2.length?pl.r2.map(c=>`<div class="bj-card${c.red?' red':''}">${c.val}<span style="font-size:0.48rem">${c.suit}</span></div>`).join(''):'';
+    const scoreH=bjState.phase==='picking'?
+      `<div class="bj-round-scores">R1:${pl.r1raw} R2:${pl.r2raw}</div><div class="bj-score">${pl.total}pt</div>`
+      :`<div class="bj-score">${pl.r1raw||'—'}</div>`;
     let extra='';
     if(bjState.phase==='picking'&&!pl.seat){
-      extra=`<div class="bj-seat-input"><input type="number" placeholder="席番号" min="1" id="bji-${i}" style="width:52px;padding:3px 6px;border-radius:6px;border:1px solid var(--border);background:rgba(0,0,0,0.3);color:var(--text);font-size:0.72rem;text-align:center;font-family:inherit;"><button onclick="bjConfirmSeat('${pl.name}',document.getElementById('bji-${i}'))" style="padding:3px 7px;border-radius:5px;border:1px solid var(--accent);background:transparent;color:var(--accent);font-size:0.65rem;cursor:pointer;">確定</button></div>`;
+      extra=`<div class="bj-seat-input"><input type="number" placeholder="席" min="1" id="bji-${i}"><button onclick="bjConfirmSeat('${pl.name.replace(/'/g,"\\'")}',document.getElementById('bji-${i}'))">確定</button></div>`;
     } else if(pl.seat){
-      extra=`<div style="font-size:0.7rem;color:var(--fixed);margin-top:3px;">${pl.seat}番席 ✓</div>`;
+      extra=`<div style="font-size:0.68rem;color:var(--fixed);margin-top:2px;">${pl.seat}番 ✓</div>`;
     }
-    div.innerHTML=`<div class="bj-player-name">${pl.name}</div><div class="bj-cards">${cards}</div><div class="bj-score">${pl.bust?'BUST':pl.score||'—'}</div><div class="bj-tag">${pl.bust?'バースト':pl.standing?'STAND':'—'}</div>${extra}`;
+    div.innerHTML=`<div class="bj-player-name">${pl.name}</div><div class="bj-cards">${r1h}</div>${r2h?`<div style="font-size:0.5rem;color:var(--muted);margin:1px 0">↓R2</div><div class="bj-cards">${r2h}</div>`:''
+    }${scoreH}${extra}`;
     c.appendChild(div);
   });
 }
 function renderBjRankList(){
   const c=document.getElementById('bjRankList');if(!c)return;c.innerHTML='';
-  const sorted=[...bjState.players].filter(p=>!p.bust).sort((a,b)=>b.score-a.score);
-  const busted=bjState.players.filter(p=>p.bust);
-  [...sorted,...busted].forEach((pl,i)=>{
-    const div=document.createElement('div');div.className='queue-item '+(pl.seat?'done':'current');
-    div.innerHTML=`<span class="q-num">${i+1}</span><span class="q-name">${pl.name}</span><span class="q-seat">${pl.bust?'BUST':pl.score}点${pl.seat?` → ${pl.seat}番`:''}</span>`;
+  const list=bjState.rankOrder.length?bjState.rankOrder:bjState.players;
+  list.forEach((pl,i)=>{
+    const div=document.createElement('div');div.className='queue-item '+(pl.seat?'done':'pending');
+    div.innerHTML=`<span class="q-num">${i+1}</span><span class="q-name">${pl.name}</span><span class="q-seat">${pl.total||0}pt${pl.seat?` → ${pl.seat}番`:''}</span>`;
     c.appendChild(div);
   });
 }
