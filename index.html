@@ -268,9 +268,24 @@
   .gacha-chute-label { font-size:0.72rem; color:var(--muted); letter-spacing:0.1em; }
   .gacha-result-area { min-height:70px; display:flex; align-items:center; justify-content:center; }
   @keyframes capsuleOut { 0%{transform:translateY(-30px) rotate(-90deg) scale(0.5);opacity:0} 60%{transform:translateY(6px) rotate(10deg) scale(1.1)} 100%{transform:translateY(0) rotate(0deg) scale(1);opacity:1} }
+  @keyframes capCrack {
+    0%  { transform: scale(1); }
+    30% { transform: scale(1.15) rotate(-5deg); }
+    60% { transform: scale(1.2) rotate(3deg); }
+    100%{ transform: scale(0) rotate(20deg); opacity: 0; }
+  }
+  @keyframes paperReveal {
+    0%  { transform: translateY(20px) scale(0.6) rotate(-8deg); opacity: 0; }
+    60% { transform: translateY(-6px) scale(1.1) rotate(2deg); }
+    100%{ transform: translateY(0) scale(1) rotate(0deg); opacity: 1; }
+  }
   .gacha-result-cap { width:70px; height:70px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.95rem; font-weight:900; color:#fff; box-shadow:0 8px 24px rgba(0,0,0,0.5), inset 0 -3px 6px rgba(0,0,0,0.2); position:relative; overflow:hidden; animation:capsuleOut 0.6s ease; }
   .gacha-result-cap::before { content:''; position:absolute; top:5px; left:10px; width:38%; height:32%; background:rgba(255,255,255,0.4); border-radius:50%; filter:blur(3px); }
   .gacha-result-cap span { position:relative; z-index:1; text-shadow:0 1px 3px rgba(0,0,0,0.4); }
+  .gacha-paper { background:#fffdf0; border-radius:8px; padding:10px 18px; box-shadow:0 4px 16px rgba(0,0,0,0.4); animation:paperReveal 0.5s ease; text-align:center; border:2px dashed rgba(0,0,0,0.15); }
+  .gacha-paper .paper-label { font-size:0.65rem; color:#888; letter-spacing:0.1em; margin-bottom:4px; }
+  .gacha-paper .paper-num { font-size:2rem; font-weight:900; color:#1a1a2e; line-height:1; }
+  .gacha-paper .paper-sub { font-size:0.7rem; color:#555; margin-top:2px; }
 
   /* ═══ BLACKJACK ═══ */
   .bj-layout { display: grid; grid-template-columns: 1fr 300px; gap: 16px; align-items: start; }
@@ -1218,31 +1233,53 @@ function rollDice(){
   if(diceState.idx>=diceState.ordered.length)return;
   const btn=document.getElementById('btnDice');btn.disabled=true;
   const d1=document.getElementById('dice1'),d2=document.getElementById('dice2');
+  const cols=_sc, rows=_sr;
+  // Build a lookup: col+row → seat num for active seats
+  const posToSeat={};
+  diceState.activeSeats.forEach(s=>posToSeat[`${s.col},${s.row}`]=s.num);
+
+  let ticks=0, finalCol=null, finalRow=null, finalSeat=null;
   d1.classList.add('rolling');d2.classList.add('rolling');
-  const avail=diceState.avail;
-  if(!avail.length){btn.disabled=false;return;}
-  const pick=avail[Math.floor(Math.random()*avail.length)];
-  const as=diceState.activeSeats.find(s=>s.num===pick);
-  const col=as?Math.min(as.col+1,6):Math.ceil(Math.random()*6);
-  const row=as?Math.min(as.row+1,6):Math.ceil(Math.random()*6);
-  let ticks=0;
+
   const iv=setInterval(()=>{
     setDiceFace('dice1',Math.ceil(Math.random()*6));
     setDiceFace('dice2',Math.ceil(Math.random()*6));
-    if(++ticks>20){
-      clearInterval(iv);
-      d1.classList.remove('rolling');d2.classList.remove('rolling');
-      setDiceFace('dice1',col);setDiceFace('dice2',row);
-      const student=diceState.ordered[diceState.idx];
-      diceState.assigned[pick]=student;
-      diceState.avail=avail.filter(n=>n!==pick);
-      diceState.idx++;
-      document.getElementById('diceResultName').textContent=student;
-      document.getElementById('diceResultSeat').textContent=`→ ${pick}番席 に決定！`;
-      fillSeatAll(pick,student,false);
-      updateDiceUI();
-      if(diceState.idx<diceState.ordered.length)btn.disabled=false;
+    if(++ticks<=20) return;
+
+    clearInterval(iv);
+    d1.classList.remove('rolling');d2.classList.remove('rolling');
+
+    // Try to find a valid available seat by random dice rolls
+    let attempts=0, found=false;
+    while(attempts<200){
+      const c=Math.floor(Math.random()*cols); // 0-based col
+      const r=Math.floor(Math.random()*rows); // 0-based row
+      const sn=posToSeat[`${c},${r}`];
+      if(sn && diceState.avail.includes(sn)){
+        finalCol=c+1; finalRow=r+1; finalSeat=sn; found=true; break;
+      }
+      attempts++;
     }
+
+    if(!found){
+      // Fallback: just pick from available seats
+      finalSeat=diceState.avail[Math.floor(Math.random()*diceState.avail.length)];
+      const as=diceState.activeSeats.find(s=>s.num===finalSeat);
+      finalCol=as?as.col+1:1; finalRow=as?as.row+1:1;
+    }
+
+    setDiceFace('dice1',Math.min(finalCol,6));
+    setDiceFace('dice2',Math.min(finalRow,6));
+
+    const student=diceState.ordered[diceState.idx];
+    diceState.assigned[finalSeat]=student;
+    diceState.avail=diceState.avail.filter(n=>n!==finalSeat);
+    diceState.idx++;
+    document.getElementById('diceResultName').textContent=student;
+    document.getElementById('diceResultSeat').textContent=`→ ${finalSeat}番席（列${finalCol}・行${finalRow}）に決定！`;
+    fillSeatAll(finalSeat,student,false);
+    updateDiceUI();
+    if(diceState.idx<diceState.ordered.length)btn.disabled=false;
   },80);
 }
 
@@ -1262,12 +1299,15 @@ function startGacha(names,fixed,ordered,activeSeats){
 }
 function buildGachaCapsules(){
   const area=document.getElementById('gachaCapsules');area.innerHTML='';
-  gachaState.avail.forEach(n=>{
+  // Shuffle display order so position doesn't reveal seat number
+  const shuffledAvail=[...gachaState.avail];
+  shuffle(shuffledAvail);
+  shuffledAvail.forEach(n=>{
     const c=document.createElement('div');
     c.className='g-cap';c.id=`gcap-${n}`;
     c.style.background=gachaState.capColors[n]||'#ff6060';
-    const num=document.createElement('div');num.className='g-cap-num';num.textContent=n;
-    c.appendChild(num);area.appendChild(c);
+    // No number shown initially
+    area.appendChild(c);
   });
 }
 function doGacha(){
@@ -1285,21 +1325,40 @@ function doGacha(){
   setTimeout(()=>{
     const pick=avail[Math.floor(Math.random()*avail.length)];
     const pickedEl=document.getElementById(`gcap-${pick}`);
-    if(pickedEl) pickedEl.classList.add('gone');
     const resArea=document.getElementById('gachaResultCap');resArea.innerHTML='';
-    const big=document.createElement('div');big.className='gacha-result-cap';
-    big.style.background=gachaState.capColors[pick]||'#ff6060';
-    big.innerHTML=`<span>${pick}番</span>`;
-    resArea.appendChild(big);
-    const student=gachaState.ordered[gachaState.idx];
-    gachaState.assigned[pick]=student;
-    gachaState.avail=avail.filter(n=>n!==pick);
-    gachaState.idx++;
-    document.getElementById('gachaResultName').textContent=student;
-    document.getElementById('gachaResultSeat').textContent=`→ ${pick}番席 に決定！`;
-    fillSeatAll(pick,student,false);
-    updateGachaUI();
-    if(gachaState.idx<gachaState.ordered.length)btn.disabled=false;
+
+    if(pickedEl){
+      // Show capsule rolling out
+      const clone=pickedEl.cloneNode(true);
+      clone.classList.remove('gone');
+      clone.style.cssText=`width:70px;height:70px;position:relative;animation:capsuleOut 0.5s ease;`;
+      resArea.appendChild(clone);
+      pickedEl.classList.add('gone');
+
+      // Crack animation then paper reveal
+      setTimeout(()=>{
+        clone.style.animation='capCrack 0.4s ease forwards';
+        setTimeout(()=>{
+          resArea.innerHTML='';
+          const paper=document.createElement('div');
+          paper.className='gacha-paper';
+          paper.innerHTML=`<div class="paper-label">SEAT</div><div class="paper-num">${pick}</div><div class="paper-sub">番席</div>`;
+          resArea.appendChild(paper);
+        },400);
+      },700);
+    }
+
+    setTimeout(()=>{
+      const student=gachaState.ordered[gachaState.idx];
+      gachaState.assigned[pick]=student;
+      gachaState.avail=avail.filter(n=>n!==pick);
+      gachaState.idx++;
+      document.getElementById('gachaResultName').textContent=student;
+      document.getElementById('gachaResultSeat').textContent=`→ ${pick}番席 に決定！`;
+      fillSeatAll(pick,student,false);
+      updateGachaUI();
+      if(gachaState.idx<gachaState.ordered.length)btn.disabled=false;
+    },1200);
   },500);
 }
 function updateGachaUI(){
@@ -1336,11 +1395,11 @@ function makeDeck(){
 function startBlackjack(names,fixed,activeSeats){
   const fixedNums=new Set(Object.keys(fixed).map(Number));
   const avail=activeSeats.map(s=>s.num).filter(n=>!fixedNums.has(n));
-  const players=names.map(n=>({name:n,r1:[],r2:[],r1raw:0,r2raw:0,r1pts:0,r2pts:0,total:0,doneR1:false,doneR2:false,seat:null}));
-  bjState={names,fixed,activeSeats,avail:[...avail],assigned:{...Object.fromEntries(Object.entries(fixed).map(([k,v])=>[Number(k),v]))},players,deck:makeDeck(),phase:'start',round:0,currentActor:0,rankOrder:[]};
-  ['btnBjStart','btnBjRound2','btnBjFinalize'].forEach(id=>{
-    const el=document.getElementById(id);if(el){el.style.display='none';}
-  });
+  // Use _or (砂時計順番) as the order for STAY/redraw choices
+  const orderedNames=(_or||names).filter(n=>!Object.values(fixed).includes(n));
+  const players=orderedNames.map(n=>({name:n,r1:[],r2:[],r1raw:0,r2raw:0,r1pts:0,r2pts:0,total:0,doneR1:false,doneR2:false,seat:null,orderIdx:orderedNames.indexOf(n)}));
+  bjState={names,fixed,activeSeats,avail:[...avail],assigned:{...Object.fromEntries(Object.entries(fixed).map(([k,v])=>[Number(k),v]))},players,orderedNames,deck:makeDeck(),phase:'start',round:0,currentActor:0,rankOrder:[],pickIdx:0};
+  ['btnBjStart','btnBjRound2','btnBjFinalize'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
   document.getElementById('btnBjStart').disabled=false;
   document.getElementById('btnBjStart').style.display='';
   document.getElementById('bjBtnRow').style.display='none';
@@ -1358,10 +1417,8 @@ function bjDealRound(round,afterDone){
     if(di>=bjState.players.length*2){afterDone();return;}
     const pi=di%bjState.players.length;
     const card=bjState.deck.pop();
-    if(round===1)bjState.players[pi].r1.push(card);
-    else bjState.players[pi].r2.push(card);
-    bjState.players[pi].r1raw=bjRawScore(bjState.players[pi].r1);
-    bjState.players[pi].r2raw=round===2?bjRawScore(bjState.players[pi].r2):0;
+    if(round===1){bjState.players[pi].r1.push(card);bjState.players[pi].r1raw=bjRawScore(bjState.players[pi].r1);}
+    else{bjState.players[pi].r2.push(card);bjState.players[pi].r2raw=bjRawScore(bjState.players[pi].r2);}
     di++;renderBjPlayers();setTimeout(deal,100);
   }
   deal();
@@ -1369,6 +1426,7 @@ function bjDealRound(round,afterDone){
 function bjStart(){
   document.getElementById('btnBjStart').style.display='none';
   bjState.round=1;bjState.currentActor=0;
+  bjState.players.forEach(p=>p.doneR1=false);
   bjDealRound(1,()=>{bjState.phase='r1play';bjNextActor();});
 }
 function bjStartRound2(){
@@ -1378,7 +1436,9 @@ function bjStartRound2(){
   bjDealRound(2,()=>{bjState.phase='r2play';bjNextActor();});
 }
 function bjNextActor(){
-  const p=bjState.players;let next=-1;
+  // Find next undone player in orderedNames sequence
+  const p=bjState.players;
+  let next=-1;
   for(let i=bjState.currentActor;i<p.length;i++){
     if(bjState.round===1&&!p[i].doneR1){next=i;break;}
     if(bjState.round===2&&!p[i].doneR2){next=i;break;}
@@ -1399,8 +1459,8 @@ function bjNextActor(){
   bjState.currentActor=next;
   const pl=p[next];
   const sc=bjState.round===1?pl.r1raw:pl.r2raw;
-  document.getElementById('bjPhaseBadge').textContent=`🃏 ${pl.name}（第${bjState.round}回）`;
-  document.getElementById('bjStatus').textContent=`${pl.name}のスコア：${sc} — このまま or 引き直し？`;
+  document.getElementById('bjPhaseBadge').textContent=`🃏 ${pl.name}（第${bjState.round}回・${next+1}番目）`;
+  document.getElementById('bjStatus').textContent=`${pl.name} のスコア：${sc} — このまま or 引き直し？`;
   document.getElementById('bjBtnRow').style.display='flex';
   renderBjPlayers();
 }
@@ -1425,10 +1485,12 @@ function bjFinalize(){
     p.r1pts=bjPointScore(p.r1);p.r2pts=bjPointScore(p.r2);
     p.total=p.r1pts+p.r2pts;
   });
+  // Sort: total desc, then r1pts desc
   bjState.rankOrder=[...bjState.players].sort((a,b)=>b.total-a.total||b.r1pts-a.r1pts);
   bjState.phase='picking';
-  document.getElementById('bjPhaseBadge').textContent='席番号を入力して確定！';
-  document.getElementById('bjStatus').textContent='合計スコア順に席番号を入力してください';
+  bjState.pickIdx=0;
+  document.getElementById('bjPhaseBadge').textContent=`🏆 ${bjState.rankOrder[0].name} が席を選択中`;
+  document.getElementById('bjStatus').textContent='合計スコア1位から席番号を入力してください';
   renderBjPlayers();renderBjRankList();
 }
 function bjConfirmSeat(playerName,inputEl){
@@ -1444,28 +1506,44 @@ function bjConfirmSeat(playerName,inputEl){
   const done=Object.keys(bjState.assigned).length;
   document.getElementById('bjProgressFill').style.width=(done/_ss.length*100)+'%';
   document.getElementById('bjProgressText').textContent=`${done} / ${_ss.length} 席 確定`;
+  // Move to next picker
+  bjState.pickIdx++;
+  if(bjState.pickIdx<bjState.rankOrder.length&&bjState.avail.length>0){
+    const next=bjState.rankOrder[bjState.pickIdx];
+    document.getElementById('bjPhaseBadge').textContent=`🏆 ${next.name} が席を選択中`;
+    document.getElementById('bjStatus').textContent=`${bjState.pickIdx+1}位：${next.name} が席を選んでいます`;
+  } else {
+    document.getElementById('bjPhaseBadge').textContent='🎉 全員確定！';
+    document.getElementById('bjStatus').textContent='';
+  }
   renderBjPlayers();renderBjRankList();
   if(bjState.avail.length===0)launchConfetti();
 }
 function renderBjPlayers(){
   const c=document.getElementById('bjPlayers');if(!c||!bjState.players)return;c.innerHTML='';
-  bjState.players.forEach((pl,i)=>{
+  // In picking phase, show in rank order; otherwise in orderedNames order
+  const displayList=bjState.phase==='picking'&&bjState.rankOrder.length?bjState.rankOrder:bjState.players;
+  displayList.forEach((pl,di)=>{
+    const i=bjState.players.indexOf(pl);
     const div=document.createElement('div');
     let cls='bj-player';
-    const isActive=(bjState.round===1&&!pl.doneR1||bjState.round===2&&!pl.doneR2)&&i===bjState.currentActor&&(bjState.phase==='r1play'||bjState.phase==='r2play');
-    if(isActive)cls+=' active-player';
+    const isChoosingTurn=(bjState.phase==='r1play'||bjState.phase==='r2play')&&i===bjState.currentActor;
+    const isPickingTurn=bjState.phase==='picking'&&!pl.seat&&di===bjState.pickIdx;
+    if(isChoosingTurn||isPickingTurn)cls+=' active-player';
     if(pl.seat)cls='bj-player done-bj';
     div.className=cls;
     const r1h=pl.r1.map(c=>`<div class="bj-card${c.red?' red':''}">${c.val}<span style="font-size:0.48rem">${c.suit}</span></div>`).join('');
     const r2h=pl.r2&&pl.r2.length?pl.r2.map(c=>`<div class="bj-card${c.red?' red':''}">${c.val}<span style="font-size:0.48rem">${c.suit}</span></div>`).join(''):'';
     const scoreH=bjState.phase==='picking'?
-      `<div class="bj-round-scores">R1:${pl.r1raw} R2:${pl.r2raw}</div><div class="bj-score">${pl.total}pt</div>`
-      :`<div class="bj-score">${pl.r1raw||'—'}</div>`;
+      `<div class="bj-round-scores">R1:${pl.r1raw}(${pl.r1pts}pt) R2:${pl.r2raw}(${pl.r2pts}pt)</div><div class="bj-score">計${pl.total}pt</div>`
+      :`<div class="bj-score">${bjState.round===2&&pl.r2raw?pl.r2raw:pl.r1raw||'—'}</div>`;
     let extra='';
-    if(bjState.phase==='picking'&&!pl.seat){
-      extra=`<div class="bj-seat-input"><input type="number" placeholder="席" min="1" id="bji-${i}"><button onclick="bjConfirmSeat('${pl.name.replace(/'/g,"\\'")}',document.getElementById('bji-${i}'))">確定</button></div>`;
+    if(isPickingTurn){
+      extra=`<div class="bj-seat-input"><input type="number" placeholder="席番号" min="1" id="bji-${i}"><button onclick="bjConfirmSeat('${pl.name.replace(/'/g,"\\'")}',document.getElementById('bji-${i}'))">確定</button></div>`;
     } else if(pl.seat){
       extra=`<div style="font-size:0.68rem;color:var(--fixed);margin-top:2px;">${pl.seat}番 ✓</div>`;
+    } else if(bjState.phase==='picking'&&!pl.seat&&di>bjState.pickIdx){
+      extra=`<div style="font-size:0.65rem;color:var(--muted);margin-top:2px;">待機中...</div>`;
     }
     div.innerHTML=`<div class="bj-player-name">${pl.name}</div><div class="bj-cards">${r1h}</div>${r2h?`<div style="font-size:0.5rem;color:var(--muted);margin:1px 0">↓R2</div><div class="bj-cards">${r2h}</div>`:''
     }${scoreH}${extra}`;
@@ -1476,7 +1554,9 @@ function renderBjRankList(){
   const c=document.getElementById('bjRankList');if(!c)return;c.innerHTML='';
   const list=bjState.rankOrder.length?bjState.rankOrder:bjState.players;
   list.forEach((pl,i)=>{
-    const div=document.createElement('div');div.className='queue-item '+(pl.seat?'done':'pending');
+    const isCurrent=bjState.phase==='picking'&&i===bjState.pickIdx&&!pl.seat;
+    const div=document.createElement('div');
+    div.className='queue-item '+(pl.seat?'done':isCurrent?'current':'pending');
     div.innerHTML=`<span class="q-num">${i+1}</span><span class="q-name">${pl.name}</span><span class="q-seat">${pl.total||0}pt${pl.seat?` → ${pl.seat}番`:''}</span>`;
     c.appendChild(div);
   });
