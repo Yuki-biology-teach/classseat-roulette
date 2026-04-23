@@ -11,6 +11,7 @@
 <link rel="manifest" href="./manifest.json">
 <link rel="apple-touch-icon" href="./icons/icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=Zen+Dots&family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
   :root {
     --bg: #0d0d1a;
@@ -164,7 +165,7 @@
   .btn-start-order:disabled { opacity: 0.3; cursor: not-allowed; }
 
   /* ═══ ROULETTE ═══ */
-  .roulette-layout { display: grid; grid-template-columns: 1fr 300px; gap: 20px; align-items: start; }
+  .roulette-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
   @media (max-width: 860px) { .roulette-layout { grid-template-columns: 1fr; } }
   .wheel-container { display: flex; flex-direction: column; align-items: center; gap: 16px; }
   .round-badge { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 7px 22px; font-size: 0.82rem; color: var(--accent); letter-spacing: 0.1em; }
@@ -196,18 +197,26 @@
   .q-seat { margin-left: auto; font-size: 0.72rem; color: var(--accent3); font-weight: 700; }
 
   /* MAP */
-  .board-label { font-size: 0.82rem; color: var(--muted); letter-spacing: 0.15em; text-align: center; padding: 9px; border: 1px dashed var(--border); border-radius: 8px; margin-bottom: 14px; }
-  .seat-grid { display: grid; gap: 7px; }
-  .seat-cell { aspect-ratio: 1; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid var(--border); background: rgba(0,0,0,0.2); transition: all 0.4s; padding: 3px; text-align: center; gap: 2px; }
-  .seat-cell .seat-num { font-size: 0.58rem; color: var(--muted); }
-  .seat-cell .seat-name { font-size: 0.65rem; font-weight: 700; color: var(--text); word-break: break-all; line-height: 1.2; }
-  .seat-cell.empty { opacity: 0.4; }
-  .seat-cell.filled { background: rgba(64,100,224,0.15); border-color: rgba(64,100,224,0.4); }
-  .seat-cell.fixed-seat { background: rgba(64,224,128,0.12); border-color: rgba(64,224,128,0.4); }
+  .podium-label { font-size: 0.82rem; color: var(--accent3); letter-spacing: 0.15em; text-align: center; padding: 9px; border: 1px solid rgba(64,192,224,0.3); border-radius: 8px; background: rgba(64,192,224,0.06); }
+  .seat-grid { display: grid; gap: 5px; }
+  .seat-cell { aspect-ratio: 1; border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid var(--border); background: rgba(255,255,255,0.05); transition: all 0.5s; padding: 2px; text-align: center; gap: 1px; }
+  .seat-cell .seat-num { font-size: 0.55rem; color: var(--muted); }
+  .seat-cell .seat-name { font-size: 0.62rem; font-weight: 700; color: var(--text); word-break: break-all; line-height: 1.2; }
+  .seat-cell.empty { opacity: 0.5; }
+  .seat-cell.pending-seat { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.15); }
+  .seat-cell.filled { background: rgba(255,255,255,0.88); border-color: rgba(255,255,255,0.9); }
+  .seat-cell.filled .seat-num { color: #555; }
+  .seat-cell.filled .seat-name { color: #111; }
+  .seat-cell.fixed-seat { background: rgba(64,224,128,0.2); border-color: rgba(64,224,128,0.5); }
+  .seat-cell.fixed-seat .seat-name { color: var(--fixed); }
   @keyframes seatPop { 0% { transform: scale(0.7); opacity: 0; } 60% { transform: scale(1.1); } 100% { transform: scale(1); opacity: 1; } }
-  .seat-cell.just-filled { animation: seatPop 0.5s ease forwards; }
-  .map-legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 12px; font-size: 0.75rem; color: var(--muted); }
+  .seat-cell.just-filled { animation: seatPop 0.45s ease forwards; }
+  .map-legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 10px; font-size: 0.75rem; color: var(--muted); }
   .legend-dot { width: 12px; height: 12px; border-radius: 3px; display: inline-block; margin-right: 4px; vertical-align: middle; }
+
+  /* Inline map panel */
+  .inline-map-panel { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 14px; }
+  .inline-map-legend { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; font-size: 0.72rem; color: var(--muted); }
 
   .confetti-container { position: fixed; inset: 0; pointer-events: none; z-index: 100; overflow: hidden; }
   .confetti-piece { position: absolute; width: 8px; height: 8px; top: -10px; animation: confettiFall linear forwards; }
@@ -343,22 +352,34 @@
           <div class="progress-text" id="progressText">0 / 0 席 確定</div>
         </div>
       </div>
-      <div class="queue-panel">
-        <h3>📋 生徒の順番</h3>
-        <div class="queue-list" id="queueList"></div>
+      <!-- Inline seat map -->
+      <div class="inline-map-panel">
+        <div class="inline-map-legend">
+          <span><span class="legend-dot" style="background:rgba(64,224,128,0.4);"></span>固定</span>
+          <span><span class="legend-dot" style="background:rgba(255,255,255,0.7);"></span>確定</span>
+          <span><span class="legend-dot" style="background:rgba(255,255,255,0.08);"></span>未定</span>
+        </div>
+        <div class="podium-label" style="margin-bottom:8px;">▲ 黒板 / 前方</div>
+        <div class="seat-grid" id="seatGrid"></div>
       </div>
     </div>
   </div>
 
   <!-- ④ MAP -->
   <div class="tab-content" id="tab-map">
-    <div class="map-legend">
-      <span><span class="legend-dot" style="background:rgba(64,224,128,0.4);"></span>固定席</span>
-      <span><span class="legend-dot" style="background:rgba(64,100,224,0.4);"></span>決定済み</span>
-      <span><span class="legend-dot" style="background:rgba(255,255,255,0.05);"></span>未決定</span>
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:10px;">
+      <div class="map-legend" style="margin-bottom:0;">
+        <span><span class="legend-dot" style="background:rgba(64,224,128,0.4);"></span>固定席</span>
+        <span><span class="legend-dot" style="background:rgba(255,255,255,0.7);"></span>決定済み</span>
+        <span><span class="legend-dot" style="background:rgba(255,255,255,0.08);"></span>未決定</span>
+      </div>
+      <button class="btn-icon" id="btnDownload" onclick="downloadMap()" style="color:var(--accent);border-color:var(--accent);">📥 PNG保存</button>
     </div>
-    <div class="board-label">▲ 黒板 / 前方</div>
-    <div class="seat-grid" id="seatGrid"></div>
+    <div id="mapExportArea" style="background:#0d0d1a;padding:16px;border-radius:12px;">
+      <div class="podium-label" style="margin-bottom:12px;">▲ 黒板 / 前方</div>
+      <div class="seat-grid" id="seatGridMap"></div>
+      <div id="mapClassName" style="text-align:center;font-size:0.75rem;color:#6060a0;margin-top:10px;letter-spacing:0.1em;"></div>
+    </div>
   </div>
 </div>
 
@@ -373,6 +394,7 @@
   </div>
 </div>
 <div class="confetti-container" id="confettiContainer"></div>
+<div id="queueList" style="display:none;"></div>
 
 <script>
 // ═══ STORAGE ═══
@@ -453,24 +475,13 @@ function updateTotalSeats(){
   document.getElementById('totalSeatsHint').textContent=`有効な席：${active} 席`;
 }
 
-// Returns array of seat numbers (1-based) that are active, numbered col-major left→right, top→bottom within each col
+// Returns active seats numbered: right col first, top→bottom within each col
 function getActiveSeats(){
   const cols=parseInt(document.getElementById('gridCols').value)||6;
   const rows=parseInt(document.getElementById('gridRows').value)||6;
-  const seats=[];
-  let num=1;
-  for(let c=0;c<cols;c++){
-    for(let r=0;r<rows;r++){
-      if(layoutGrid[c]&&layoutGrid[c][r]) seats.push({col:c,row:r,num:num++});
-      else if(layoutGrid[c]&&layoutGrid[c][r]!==undefined) num++;
-      // num always increments for consistent labelling? 
-      // Actually: seat numbers assigned only to active cells, in order
-    }
-  }
-  // Re-do: number only active cells
   const result=[];
   let n=1;
-  for(let c=0;c<cols;c++){
+  for(let c=cols-1;c>=0;c--){
     for(let r=0;r<rows;r++){
       if(layoutGrid[c]&&layoutGrid[c][r]===true){
         result.push({col:c,row:r,num:n++});
@@ -746,32 +757,36 @@ function updateQH(){
   });
 }
 function buildSeatGrid(cols,rows,activeSeats){
-  const grid=document.getElementById('seatGrid');
-  grid.style.gridTemplateColumns=`repeat(${cols},1fr)`;grid.innerHTML='';
-  const activeSet=new Set((activeSeats||[]).map(s=>s.num));
-  const seatByPos={};
-  (activeSeats||[]).forEach(s=>seatByPos[`${s.col},${s.row}`]=s.num);
-  for(let r=0;r<rows;r++){
-    for(let c=0;c<cols;c++){
-      const cell=document.createElement('div');
-      const num=seatByPos[`${c},${r}`];
-      if(num){
-        cell.className='seat-cell empty';cell.id=`seat-${num}`;
-        cell.innerHTML=`<div class="seat-num">${num}</div><div class="seat-name"></div>`;
-      } else {
-        cell.className='seat-cell';
-        cell.style.cssText='background:transparent;border-color:transparent;pointer-events:none;';
+  ['seatGrid','seatGridMap'].forEach(id=>{
+    const grid=document.getElementById(id);
+    if(!grid)return;
+    grid.style.gridTemplateColumns=`repeat(${cols},1fr)`;grid.innerHTML='';
+    const seatByPos={};
+    (activeSeats||[]).forEach(s=>seatByPos[`${s.col},${s.row}`]=s.num);
+    for(let r=0;r<rows;r++){
+      for(let c=0;c<cols;c++){
+        const cell=document.createElement('div');
+        const num=seatByPos[`${c},${r}`];
+        if(num){
+          cell.className='seat-cell pending-seat';cell.id=`${id}-seat-${num}`;
+          cell.innerHTML=`<div class="seat-num">${num}</div><div class="seat-name"></div>`;
+        } else {
+          cell.className='seat-cell';
+          cell.style.cssText='background:transparent;border-color:transparent;pointer-events:none;';
+        }
+        grid.appendChild(cell);
       }
-      grid.appendChild(cell);
     }
-  }
+  });
   Object.entries(fixedSeats).forEach(([s,n])=>fillSeat(parseInt(s),n,true));
 }
 function fillSeat(sn,name,isFixed=false){
-  const c=document.getElementById(`seat-${sn}`);if(!c)return;
-  c.querySelector('.seat-name').textContent=name;
-  c.className='seat-cell '+(isFixed?'fixed-seat':'filled')+' just-filled';
-  setTimeout(()=>c.classList.remove('just-filled'),600);
+  ['seatGrid','seatGridMap'].forEach(id=>{
+    const c=document.getElementById(`${id}-seat-${sn}`);if(!c)return;
+    c.querySelector('.seat-name').textContent=name;
+    c.className='seat-cell '+(isFixed?'fixed-seat':'filled')+' just-filled';
+    setTimeout(()=>c.classList.remove('just-filled'),600);
+  });
 }
 function drawWheel(hi=-1){
   const cv=document.getElementById('wheelCanvas'),ctx=cv.getContext('2d');
@@ -866,6 +881,35 @@ if('serviceWorker' in navigator){
     navigator.serviceWorker.register('./sw.js')
       .then(reg => console.log('SW registered:', reg.scope))
       .catch(err => console.log('SW error:', err));
+  });
+}
+
+// ═══ DOWNLOAD MAP AS PNG ═══
+function downloadMap(){
+  const btn=document.getElementById('btnDownload');
+  btn.textContent='⏳ 生成中...';btn.disabled=true;
+
+  // クラス名を表示
+  const cn=getCurrentClass()||'席替え結果';
+  document.getElementById('mapClassName').textContent=cn;
+
+  const target=document.getElementById('mapExportArea');
+  html2canvas(target,{
+    backgroundColor:'#0d0d1a',
+    scale:2,
+    useCORS:true,
+    logging:false,
+  }).then(canvas=>{
+    const link=document.createElement('a');
+    const date=new Date();
+    const stamp=`${date.getFullYear()}${String(date.getMonth()+1).padStart(2,'0')}${String(date.getDate()).padStart(2,'0')}`;
+    link.download=`席替え_${cn}_${stamp}.png`;
+    link.href=canvas.toDataURL('image/png');
+    link.click();
+    btn.textContent='📥 PNG保存';btn.disabled=false;
+  }).catch(()=>{
+    btn.textContent='📥 PNG保存';btn.disabled=false;
+    alert('画像の生成に失敗しました。');
   });
 }
 </script>
