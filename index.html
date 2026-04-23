@@ -251,7 +251,57 @@
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
-  /* LAYOUT EDITOR */
+  /* ═══ MODE CARDS ═══ */
+  .mode-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
+  @media(max-width:700px){ .mode-grid { grid-template-columns: repeat(2,1fr); } }
+  .mode-card { background: rgba(0,0,0,0.25); border: 2px solid var(--border); border-radius: 14px; padding: 16px 10px; text-align: center; cursor: pointer; transition: all 0.2s; }
+  .mode-card:hover { border-color: var(--muted); background: rgba(255,255,255,0.04); }
+  .mode-card.active { border-color: var(--accent); background: rgba(240,192,64,0.08); }
+  .mode-icon { font-size: 2rem; margin-bottom: 6px; }
+  .mode-name { font-size: 0.88rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .mode-desc { font-size: 0.7rem; color: var(--muted); line-height: 1.4; }
+  .mode-card.active .mode-name { color: var(--accent); }
+
+  /* ═══ DICE ═══ */
+  .dice-stage { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 20px; }
+  .dice-wrap { display: flex; gap: 24px; }
+  .dice { width: 90px; height: 90px; border-radius: 16px; background: #fff; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 24px rgba(0,0,0,0.5), inset 0 2px 4px rgba(255,255,255,0.3); transition: transform 0.1s; }
+  .dice.rolling { animation: diceRoll 0.08s infinite; }
+  @keyframes diceRoll { 0%{transform:rotate(-8deg) scale(1.05)} 50%{transform:rotate(8deg) scale(0.95)} 100%{transform:rotate(-8deg) scale(1.05)} }
+  .dice-face { font-size: 2.8rem; font-weight: 900; color: #1a1a2e; line-height: 1; }
+  .dice-labels { display: flex; gap: 70px; font-size: 0.75rem; color: var(--muted); letter-spacing: 0.1em; }
+
+  /* ═══ GACHA ═══ */
+  .gacha-stage { display: flex; flex-direction: column; align-items: center; padding: 10px 0; }
+
+  /* ═══ BLACKJACK ═══ */
+  .bj-layout { display: grid; grid-template-columns: 1fr 320px; gap: 16px; align-items: start; }
+  @media(max-width:860px){ .bj-layout { grid-template-columns: 1fr; } }
+  .bj-main { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .bj-table { width: 100%; background: rgba(0,80,40,0.25); border: 1px solid rgba(0,160,80,0.3); border-radius: 16px; padding: 16px; min-height: 180px; }
+  .bj-players { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+  .bj-player { background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 12px; padding: 10px 14px; min-width: 100px; text-align: center; transition: all 0.3s; }
+  .bj-player.active-player { border-color: var(--accent); background: rgba(240,192,64,0.1); }
+  .bj-player.bust { border-color: #e06060; background: rgba(224,64,64,0.1); opacity: 0.6; }
+  .bj-player.standing { border-color: var(--accent3); background: rgba(64,192,224,0.08); }
+  .bj-player.winner { border-color: var(--fixed); background: rgba(64,224,128,0.12); }
+  .bj-player-name { font-size: 0.78rem; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+  .bj-cards { display: flex; gap: 4px; justify-content: center; flex-wrap: wrap; margin-bottom: 4px; }
+  .bj-card { width: 28px; height: 40px; border-radius: 4px; background: #fff; color: #1a1a2e; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 900; box-shadow: 0 2px 6px rgba(0,0,0,0.4); }
+  .bj-card.red { color: #cc2222; }
+  .bj-card.back { background: linear-gradient(135deg,#1e3a6e,#2a5298); color: transparent; }
+  .bj-score { font-size: 0.85rem; font-weight: 700; color: var(--accent); }
+  .bj-tag { font-size: 0.65rem; color: var(--muted); margin-top: 2px; }
+  .bj-controls { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; max-width: 400px; }
+  .bj-status { font-size: 0.9rem; color: var(--text); text-align: center; min-height: 24px; }
+  .bj-btn-row { display: flex; gap: 12px; }
+  .bj-seat-picker { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 14px; width: 100%; }
+  .bj-seat-picker h4 { font-size: 0.85rem; color: var(--accent); margin-bottom: 10px; }
+  .bj-seat-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+  .bj-seat-btn { padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border); background: rgba(255,255,255,0.05); color: var(--text); font-size: 0.8rem; cursor: pointer; transition: all 0.15s; font-family: 'Noto Sans JP',sans-serif; }
+  .bj-seat-btn:hover { background: rgba(240,192,64,0.2); border-color: var(--accent); color: var(--accent); }
+
+  /* ═══ LAYOUT EDITOR ═══ */
   .le-cell {
     width: 36px; height: 36px; border-radius: 6px; border: 1px solid var(--border);
     background: rgba(64,100,200,0.18); cursor: pointer;
@@ -274,7 +324,7 @@
   <div class="tabs">
     <button class="tab-btn active" onclick="showTab('setup',this)">① 設定</button>
     <button class="tab-btn" onclick="showTab('order',this)">② 順番決め</button>
-    <button class="tab-btn" onclick="showTab('roulette',this)">③ 席ルーレット</button>
+    <button class="tab-btn" onclick="showTab('roulette',this)" id="tabMode">③ 席決め</button>
     <button class="tab-btn" onclick="showTab('map',this)">④ 座席マップ</button>
   </div>
 
@@ -323,6 +373,34 @@
       </div>
     </div>
     <div id="setupError" class="error-msg" style="display:none;"></div>
+
+    <!-- モード選択 -->
+    <div class="panel" style="margin-top:16px;">
+      <h2>席替えモード</h2>
+      <div class="mode-grid">
+        <div class="mode-card active" data-mode="roulette" onclick="selectMode('roulette')">
+          <div class="mode-icon">🎡</div>
+          <div class="mode-name">ルーレット</div>
+          <div class="mode-desc">ホイールを回して席番号を決定</div>
+        </div>
+        <div class="mode-card" data-mode="dice" onclick="selectMode('dice')">
+          <div class="mode-icon">🎲</div>
+          <div class="mode-name">サイコロ</div>
+          <div class="mode-desc">2個のサイコロで列×行を指定</div>
+        </div>
+        <div class="mode-card" data-mode="gacha" onclick="selectMode('gacha')">
+          <div class="mode-icon">🎰</div>
+          <div class="mode-name">ガチャ</div>
+          <div class="mode-desc">カプセルが転がって席番号が出現</div>
+        </div>
+        <div class="mode-card" data-mode="blackjack" onclick="selectMode('blackjack')">
+          <div class="mode-icon">🃏</div>
+          <div class="mode-name">ブラックジャック</div>
+          <div class="mode-desc">21に近い順に席を選ぶ権利獲得</div>
+        </div>
+      </div>
+    </div>
+
     <button class="btn-primary" onclick="saveAndGoOrder()">💾 保存して順番決めへ →</button>
   </div>
 
@@ -386,6 +464,121 @@
         <h3>📋 順番一覧</h3>
         <div class="queue-now" id="queueNow">—</div>
         <div class="queue-list" id="queueList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ③ サイコロ -->
+  <div class="tab-content" id="tab-dice">
+    <div class="roulette-layout">
+      <div class="wheel-container">
+        <div class="round-badge" id="diceTurnBadge">—</div>
+        <div class="dice-stage">
+          <div class="dice-wrap">
+            <div class="dice" id="dice1"><div class="dice-face" id="diceFace1">1</div></div>
+            <div class="dice" id="dice2"><div class="dice-face" id="diceFace2">1</div></div>
+          </div>
+          <div class="dice-labels"><span>列</span><span>行</span></div>
+        </div>
+        <div class="spin-result">
+          <div class="result-label">RESULT</div>
+          <div class="result-name" id="diceResultName">—</div>
+          <div class="result-seat" id="diceResultSeat"></div>
+        </div>
+        <button class="btn-spin" id="btnDice" onclick="rollDice()" disabled>🎲 ROLL</button>
+        <div style="width:100%;max-width:300px;">
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" id="diceProgressFill" style="width:0%"></div></div>
+          <div class="progress-text" id="diceProgressText">0 / 0 席 確定</div>
+        </div>
+      </div>
+      <div class="inline-map-panel">
+        <div class="inline-map-legend">
+          <span><span class="legend-dot" style="background:rgba(64,224,128,0.4);"></span>固定</span>
+          <span><span class="legend-dot" style="background:rgba(255,255,255,0.7);"></span>確定</span>
+          <span><span class="legend-dot" style="background:rgba(255,255,255,0.08);"></span>未定</span>
+        </div>
+        <div class="podium-label" style="margin-bottom:8px;">▲ 黒板 / 前方</div>
+        <div class="seat-grid" id="seatGridDice"></div>
+      </div>
+      <div class="queue-panel">
+        <h3>📋 順番一覧</h3>
+        <div class="queue-now" id="diceQueueNow">—</div>
+        <div class="queue-list" id="diceQueueList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ③ ガチャ -->
+  <div class="tab-content" id="tab-gacha">
+    <div class="roulette-layout">
+      <div class="wheel-container">
+        <div class="round-badge" id="gachaTurnBadge">—</div>
+        <div class="gacha-stage">
+          <canvas id="gachaCanvas" width="300" height="260"></canvas>
+        </div>
+        <div class="spin-result">
+          <div class="result-label">RESULT</div>
+          <div class="result-name" id="gachaResultName">—</div>
+          <div class="result-seat" id="gachaResultSeat"></div>
+        </div>
+        <button class="btn-spin" id="btnGacha" onclick="doGacha()" disabled>🎰 ガチャを回す</button>
+        <div style="width:100%;max-width:300px;">
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" id="gachaProgressFill" style="width:0%"></div></div>
+          <div class="progress-text" id="gachaProgressText">0 / 0 席 確定</div>
+        </div>
+      </div>
+      <div class="inline-map-panel">
+        <div class="inline-map-legend">
+          <span><span class="legend-dot" style="background:rgba(64,224,128,0.4);"></span>固定</span>
+          <span><span class="legend-dot" style="background:rgba(255,255,255,0.7);"></span>確定</span>
+          <span><span class="legend-dot" style="background:rgba(255,255,255,0.08);"></span>未定</span>
+        </div>
+        <div class="podium-label" style="margin-bottom:8px;">▲ 黒板 / 前方</div>
+        <div class="seat-grid" id="seatGridGacha"></div>
+      </div>
+      <div class="queue-panel">
+        <h3>📋 順番一覧</h3>
+        <div class="queue-now" id="gachaQueueNow">—</div>
+        <div class="queue-list" id="gachaQueueList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ③ ブラックジャック -->
+  <div class="tab-content" id="tab-blackjack">
+    <div class="bj-layout">
+      <div class="bj-main">
+        <div class="round-badge" id="bjPhaseBadge">準備中</div>
+        <div class="bj-table" id="bjTable">
+          <div class="bj-players" id="bjPlayers"></div>
+        </div>
+        <div class="bj-controls">
+          <div id="bjStatus" class="bj-status">「カードを配る」を押してください</div>
+          <div class="bj-btn-row" id="bjBtnRow" style="display:none;">
+            <button class="btn-spin" id="btnBjHit" onclick="bjHit()" style="font-size:0.9rem;padding:10px 28px;">HIT（引く）</button>
+            <button class="btn-spin" id="btnBjStand" onclick="bjStand()" style="font-size:0.9rem;padding:10px 28px;border-color:var(--accent3);color:var(--accent3);">STAND（止まる）</button>
+          </div>
+          <button class="btn-spin" id="btnBjStart" onclick="bjStart()" disabled style="margin-top:8px;">🃏 カードを配る</button>
+        </div>
+        <div style="width:100%;max-width:400px;margin-top:8px;">
+          <div class="progress-bar-wrap"><div class="progress-bar-fill" id="bjProgressFill" style="width:0%"></div></div>
+          <div class="progress-text" id="bjProgressText">0 / 0 席 確定</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="inline-map-panel">
+          <div class="inline-map-legend">
+            <span><span class="legend-dot" style="background:rgba(64,224,128,0.4);"></span>固定</span>
+            <span><span class="legend-dot" style="background:rgba(255,255,255,0.7);"></span>確定</span>
+            <span><span class="legend-dot" style="background:rgba(255,255,255,0.08);"></span>未定</span>
+          </div>
+          <div class="podium-label" style="margin-bottom:8px;">▲ 黒板 / 前方</div>
+          <div class="seat-grid" id="seatGridBj"></div>
+        </div>
+        <div class="queue-panel">
+          <h3>🏆 席選択順</h3>
+          <div class="queue-list" id="bjRankList" style="max-height:200px;overflow-y:auto;"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -715,10 +908,72 @@ function addRankItem(name,rank){
   setTimeout(()=>{div.classList.remove('landed');div.classList.add('settled');},550);
 }
 
+// ═══ MODE ═══
+let currentMode = 'roulette';
+function selectMode(m){
+  currentMode=m;
+  document.querySelectorAll('.mode-card').forEach(c=>c.classList.toggle('active',c.dataset.mode===m));
+}
+
 function launchRouletteFromOrder(){
-  startRoulette(_ss,_sc,_sr,_sf,_st,_or,_activeSeats);
-  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',i===2));
-  document.querySelectorAll('.tab-content').forEach((t,i)=>t.classList.toggle('active',i===2));
+  const tabMap={roulette:'roulette',dice:'dice',gacha:'gacha',blackjack:'blackjack'};
+  const tabId=tabMap[currentMode]||'roulette';
+  // 全タブのseatGridを初期化
+  buildAllSeatGrids();
+  if(currentMode==='roulette'){
+    startRoulette(_ss,_sc,_sr,_sf,_st,_or,_activeSeats);
+  } else if(currentMode==='dice'){
+    startDice(_ss,_sf,_or,_activeSeats);
+  } else if(currentMode==='gacha'){
+    startGacha(_ss,_sf,_or,_activeSeats);
+  } else if(currentMode==='blackjack'){
+    startBlackjack(_ss,_sf,_activeSeats);
+  }
+  const tabs=['setup','order','roulette','dice','gacha','blackjack','map'];
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>{
+    b.classList.toggle('active',i===2);
+    if(i===2) b.textContent={roulette:'③ ルーレット',dice:'③ サイコロ',gacha:'③ ガチャ',blackjack:'③ ブラックジャック'}[currentMode]||'③ 席決め';
+  });
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+tabId).classList.add('active');
+}
+
+function buildAllSeatGrids(){
+  const ids=['seatGrid','seatGridMap','seatGridDice','seatGridGacha','seatGridBj'];
+  ids.forEach(id=>{
+    const g=document.getElementById(id);if(!g)return;
+    g.style.gridTemplateColumns=`repeat(${_sc},1fr)`;g.innerHTML='';
+    const rows=_sr;
+    const seatByPos={};
+    (_activeSeats||[]).forEach(s=>seatByPos[`${s.col},${s.row}`]=s.num);
+    for(let r=0;r<rows;r++){
+      for(let c=0;c<_sc;c++){
+        const cell=document.createElement('div');
+        const num=seatByPos[`${c},${r}`];
+        if(num){
+          cell.className='seat-cell pending-seat';cell.id=`${id}-seat-${num}`;
+          cell.innerHTML=`<div class="seat-num">${num}</div><div class="seat-name"></div>`;
+        } else {
+          cell.className='seat-cell';cell.style.cssText='background:transparent;border-color:transparent;pointer-events:none;';
+        }
+        g.appendChild(cell);
+      }
+    }
+    Object.entries(_sf).forEach(([s,n])=>{
+      const c=document.getElementById(`${id}-seat-${s}`);if(!c)return;
+      c.querySelector('.seat-name').textContent=n;
+      c.className='seat-cell fixed-seat';
+    });
+  });
+}
+
+function fillSeatAll(sn,name,isFixed=false){
+  ['seatGrid','seatGridMap','seatGridDice','seatGridGacha','seatGridBj'].forEach(id=>{
+    const c=document.getElementById(`${id}-seat-${sn}`);if(!c)return;
+    c.querySelector('.seat-name').textContent=name;
+    c.className='seat-cell '+(isFixed?'fixed-seat':'filled')+' just-filled';
+    setTimeout(()=>c.classList.remove('just-filled'),600);
+  });
 }
 
 // ═══ ROULETTE ENGINE ═══
@@ -794,36 +1049,304 @@ function updateQH(){
   if(cur) cur.scrollIntoView({block:'nearest',behavior:'smooth'});
 }
 function buildSeatGrid(cols,rows,activeSeats){
-  ['seatGrid','seatGridMap'].forEach(id=>{
-    const grid=document.getElementById(id);
-    if(!grid)return;
-    grid.style.gridTemplateColumns=`repeat(${cols},1fr)`;grid.innerHTML='';
-    const seatByPos={};
-    (activeSeats||[]).forEach(s=>seatByPos[`${s.col},${s.row}`]=s.num);
-    for(let r=0;r<rows;r++){
-      for(let c=0;c<cols;c++){
-        const cell=document.createElement('div');
-        const num=seatByPos[`${c},${r}`];
-        if(num){
-          cell.className='seat-cell pending-seat';cell.id=`${id}-seat-${num}`;
-          cell.innerHTML=`<div class="seat-num">${num}</div><div class="seat-name"></div>`;
-        } else {
-          cell.className='seat-cell';
-          cell.style.cssText='background:transparent;border-color:transparent;pointer-events:none;';
-        }
-        grid.appendChild(cell);
-      }
-    }
-  });
-  Object.entries(fixedSeats).forEach(([s,n])=>fillSeat(parseInt(s),n,true));
+  // handled by buildAllSeatGrids now
 }
-function fillSeat(sn,name,isFixed=false){
-  ['seatGrid','seatGridMap'].forEach(id=>{
-    const c=document.getElementById(`${id}-seat-${sn}`);if(!c)return;
-    c.querySelector('.seat-name').textContent=name;
-    c.className='seat-cell '+(isFixed?'fixed-seat':'filled')+' just-filled';
-    setTimeout(()=>c.classList.remove('just-filled'),600);
+function fillSeat(sn,name,isFixed=false){ fillSeatAll(sn,name,isFixed); }
+
+// ─── DICE ───
+let diceState={};
+function startDice(names,fixed,ordered,activeSeats){
+  const fixedNums=new Set(Object.keys(fixed).map(Number));
+  const avail=activeSeats.map(s=>s.num).filter(n=>!fixedNums.has(n));
+  diceState={names,fixed,ordered,activeSeats,avail:[...avail],assigned:{...Object.fromEntries(Object.entries(fixed).map(([k,v])=>[Number(k),v]))},idx:0,cols:_sc,rows:_sr};
+  buildModeQueue('diceQueueList','diceQueueNow',fixed,ordered);
+  updateDiceUI();
+  document.getElementById('btnDice').disabled=false;
+}
+function updateDiceUI(){
+  const s=diceState;
+  document.getElementById('diceProgressFill').style.width=(Object.keys(s.assigned).length/_ss.length*100)+'%';
+  document.getElementById('diceProgressText').textContent=`${Object.keys(s.assigned).length} / ${_ss.length} 席 確定`;
+  if(s.idx>=s.ordered.length){
+    document.getElementById('diceTurnBadge').textContent='🎉 全員確定！';
+    document.getElementById('btnDice').disabled=true;
+    launchConfetti();return;
+  }
+  document.getElementById('diceTurnBadge').textContent=`${s.idx+1}番目：${s.ordered[s.idx]}`;
+  updateModeQueue('diceQueueList','diceQueueNow',s.ordered,s.idx,s.assigned,s.fixed);
+}
+function rollDice(){
+  if(diceState.idx>=diceState.ordered.length)return;
+  const btn=document.getElementById('btnDice');btn.disabled=true;
+  const d1=document.getElementById('dice1'),d2=document.getElementById('dice2');
+  const f1=document.getElementById('diceFace1'),f2=document.getElementById('diceFace2');
+  d1.classList.add('rolling');d2.classList.add('rolling');
+  const faces=['⚀','⚁','⚂','⚃','⚄','⚅'];
+  let ticks=0;
+  const iv=setInterval(()=>{
+    f1.textContent=faces[Math.floor(Math.random()*6)];
+    f2.textContent=faces[Math.floor(Math.random()*6)];
+    if(++ticks>18){
+      clearInterval(iv);
+      d1.classList.remove('rolling');d2.classList.remove('rolling');
+      // pick random available seat
+      const avail=diceState.avail;
+      if(!avail.length){btn.disabled=false;return;}
+      const pick=avail[Math.floor(Math.random()*avail.length)];
+      // find col/row for display
+      const as=diceState.activeSeats.find(s=>s.num===pick);
+      const col=as?as.col+1:'?', row=as?as.row+1:'?';
+      f1.textContent=faces[Math.min(col-1,5)];
+      f2.textContent=faces[Math.min(row-1,5)];
+      const student=diceState.ordered[diceState.idx];
+      diceState.assigned[pick]=student;
+      diceState.avail=avail.filter(n=>n!==pick);
+      diceState.idx++;
+      document.getElementById('diceResultName').textContent=student;
+      document.getElementById('diceResultSeat').textContent=`→ ${pick}番席 に決定！`;
+      fillSeatAll(pick,student,false);
+      updateDiceUI();
+      if(diceState.idx<diceState.ordered.length)btn.disabled=false;
+    }
+  },80);
+}
+
+// ─── GACHA ───
+let gachaState={},gachaAnimId=null;
+function startGacha(names,fixed,ordered,activeSeats){
+  const fixedNums=new Set(Object.keys(fixed).map(Number));
+  const avail=activeSeats.map(s=>s.num).filter(n=>!fixedNums.has(n));
+  gachaState={names,fixed,ordered,activeSeats,avail:[...avail],assigned:{...Object.fromEntries(Object.entries(fixed).map(([k,v])=>[Number(k),v]))},idx:0};
+  buildModeQueue('gachaQueueList','gachaQueueNow',fixed,ordered);
+  drawGacha(null);
+  updateGachaUI();
+  document.getElementById('btnGacha').disabled=false;
+}
+function drawGacha(seatNum){
+  const cv=document.getElementById('gachaCanvas');if(!cv)return;
+  const ctx=cv.getContext('2d');
+  ctx.clearRect(0,0,300,260);
+  // Machine body
+  ctx.fillStyle='#2a2a50';ctx.beginPath();ctx.roundRect(80,60,140,120,10);ctx.fill();
+  ctx.strokeStyle='rgba(240,192,64,0.5)';ctx.lineWidth=2;ctx.stroke();
+  // Globe
+  ctx.fillStyle='rgba(64,100,200,0.3)';ctx.beginPath();ctx.arc(150,90,52,0,2*Math.PI);ctx.fill();
+  ctx.strokeStyle='rgba(100,150,255,0.6)';ctx.lineWidth=2;ctx.stroke();
+  // Neck
+  ctx.fillStyle='#1a1a30';ctx.fillRect(135,140,30,20);
+  // Tray
+  ctx.fillStyle='#2a2a50';ctx.beginPath();ctx.roundRect(110,158,80,30,6);ctx.fill();
+  ctx.strokeStyle='rgba(240,192,64,0.4)';ctx.lineWidth=1.5;ctx.stroke();
+  // Handle
+  ctx.strokeStyle='rgba(240,192,64,0.7)';ctx.lineWidth=4;ctx.beginPath();ctx.arc(222,120,18,Math.PI*0.2,Math.PI*1.8);ctx.stroke();
+  ctx.fillStyle='#f0c040';ctx.beginPath();ctx.arc(222,139,7,0,2*Math.PI);ctx.fill();
+  // Capsule in tray
+  if(seatNum!==null){
+    const cx=150,cy=173;
+    ctx.fillStyle='#ff6060';ctx.beginPath();ctx.ellipse(cx,cy,22,14,0,Math.PI,2*Math.PI);ctx.fill();
+    ctx.fillStyle='#ffeeee';ctx.beginPath();ctx.ellipse(cx,cy,22,14,0,0,Math.PI);ctx.fill();
+    ctx.strokeStyle='rgba(255,255,255,0.3)';ctx.lineWidth=1;ctx.beginPath();ctx.ellipse(cx,cy,22,14,0,0,2*Math.PI);ctx.stroke();
+    ctx.fillStyle='#1a1a2e';ctx.font='bold 11px Noto Sans JP';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(`${seatNum}番`,cx,cy);
+  }
+}
+function doGacha(){
+  if(gachaState.idx>=gachaState.ordered.length)return;
+  const btn=document.getElementById('btnGacha');btn.disabled=true;
+  const avail=gachaState.avail;
+  if(!avail.length){btn.disabled=false;return;}
+  const pick=avail[Math.floor(Math.random()*avail.length)];
+  let t=0;
+  const iv=setInterval(()=>{
+    drawGacha(avail[Math.floor(Math.random()*avail.length)]);
+    if(++t>20){
+      clearInterval(iv);
+      drawGacha(pick);
+      const student=gachaState.ordered[gachaState.idx];
+      gachaState.assigned[pick]=student;
+      gachaState.avail=avail.filter(n=>n!==pick);
+      gachaState.idx++;
+      document.getElementById('gachaResultName').textContent=student;
+      document.getElementById('gachaResultSeat').textContent=`→ ${pick}番席 に決定！`;
+      fillSeatAll(pick,student,false);
+      updateGachaUI();
+      if(gachaState.idx<gachaState.ordered.length)btn.disabled=false;
+    }
+  },60);
+}
+function updateGachaUI(){
+  const s=gachaState;
+  document.getElementById('gachaProgressFill').style.width=(Object.keys(s.assigned).length/_ss.length*100)+'%';
+  document.getElementById('gachaProgressText').textContent=`${Object.keys(s.assigned).length} / ${_ss.length} 席 確定`;
+  if(s.idx>=s.ordered.length){
+    document.getElementById('gachaTurnBadge').textContent='🎉 全員確定！';
+    document.getElementById('btnGacha').disabled=true;launchConfetti();return;
+  }
+  document.getElementById('gachaTurnBadge').textContent=`${s.idx+1}番目：${s.ordered[s.idx]}`;
+  updateModeQueue('gachaQueueList','gachaQueueNow',s.ordered,s.idx,s.assigned,s.fixed);
+}
+
+// ─── BLACKJACK ───
+let bjState={};
+const SUITS=['♠','♥','♦','♣'];
+const VALS=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+function bjCardVal(v){return v==='A'?11:['J','Q','K'].includes(v)?10:parseInt(v);}
+function bjScore(cards){
+  let s=cards.reduce((a,c)=>a+bjCardVal(c.val),0),aces=cards.filter(c=>c.val==='A').length;
+  while(s>21&&aces-->0)s-=10;return s;
+}
+function makeDeck(){
+  const d=[];
+  SUITS.forEach(s=>VALS.forEach(v=>d.push({suit:s,val:v,red:s==='♥'||s==='♦'})));
+  return shuffle([...d]);
+}
+function startBlackjack(names,fixed,activeSeats){
+  const fixedNums=new Set(Object.keys(fixed).map(Number));
+  const avail=activeSeats.map(s=>s.num).filter(n=>!fixedNums.has(n));
+  const players=names.map(n=>({name:n,cards:[],standing:false,bust:false,score:0}));
+  bjState={names,fixed,activeSeats,avail:[...avail],assigned:{...Object.fromEntries(Object.entries(fixed).map(([k,v])=>[Number(k),v]))},players,deck:makeDeck(),phase:'start',pickOrder:[],currentPicker:0};
+  document.getElementById('btnBjStart').disabled=false;
+  document.getElementById('bjProgressFill').style.width='0%';
+  document.getElementById('bjProgressText').textContent=`0 / ${names.length} 席 確定`;
+  renderBjPlayers();
+}
+function bjStart(){
+  // Deal 2 cards each
+  bjState.players.forEach(p=>{
+    p.cards=[bjState.deck.pop(),bjState.deck.pop()];
+    p.score=bjScore(p.cards);
   });
+  bjState.phase='playing';
+  bjState.currentActor=0;
+  document.getElementById('btnBjStart').style.display='none';
+  renderBjPlayers();
+  bjNextActor();
+}
+function bjNextActor(){
+  const p=bjState.players;
+  const remaining=p.findIndex((pl,i)=>i>=bjState.currentActor&&!pl.standing&&!pl.bust);
+  if(remaining===-1){bjReveal();return;}
+  bjState.currentActor=remaining;
+  const pl=p[remaining];
+  document.getElementById('bjStatus').textContent=`${pl.name} のターン — スコア：${pl.score}`;
+  document.getElementById('bjPhaseBadge').textContent=`${remaining+1}人目：${pl.name}`;
+  document.getElementById('bjBtnRow').style.display='flex';
+  renderBjPlayers();
+}
+function bjHit(){
+  const pl=bjState.players[bjState.currentActor];
+  pl.cards.push(bjState.deck.pop());
+  pl.score=bjScore(pl.cards);
+  if(pl.score>21){pl.bust=true;document.getElementById('bjBtnRow').style.display='none';renderBjPlayers();setTimeout(()=>{bjState.currentActor++;bjNextActor();},800);}
+  else{document.getElementById('bjStatus').textContent=`${pl.name} のターン — スコア：${pl.score}`;renderBjPlayers();}
+}
+function bjStand(){
+  bjState.players[bjState.currentActor].standing=true;
+  document.getElementById('bjBtnRow').style.display='none';
+  renderBjPlayers();
+  bjState.currentActor++;
+  setTimeout(bjNextActor,400);
+}
+function bjReveal(){
+  // Sort: not-bust first by score desc, then bust
+  const scored=bjState.players.filter(p=>!p.bust).sort((a,b)=>b.score-a.score);
+  const busted=bjState.players.filter(p=>p.bust);
+  bjState.pickOrder=[...scored,...busted];
+  bjState.currentPicker=0;
+  bjState.phase='picking';
+  document.getElementById('bjPhaseBadge').textContent='席を選んでください！';
+  document.getElementById('bjStatus').textContent='スコアの高い順に席を選びます';
+  renderBjPlayers();
+  renderBjRankList();
+  setTimeout(bjNextPicker,600);
+}
+function bjNextPicker(){
+  if(bjState.currentPicker>=bjState.pickOrder.length||!bjState.avail.length){
+    document.getElementById('bjPhaseBadge').textContent='🎉 全員確定！';
+    launchConfetti();return;
+  }
+  const pl=bjState.pickOrder[bjState.currentPicker];
+  document.getElementById('bjStatus').innerHTML=`<strong style="color:var(--accent)">${pl.name}</strong> が席を選んでいます（スコア：${pl.bust?'BUST':pl.score}）`;
+  document.getElementById('bjPhaseBadge').textContent=`席選択：${pl.name}`;
+  showBjSeatPicker(pl);
+}
+function showBjSeatPicker(pl){
+  // Remove existing picker
+  const old=document.getElementById('bjSeatPicker');if(old)old.remove();
+  const div=document.createElement('div');div.className='bj-seat-picker';div.id='bjSeatPicker';
+  div.innerHTML=`<h4>${pl.name} の席を選択</h4><div class="bj-seat-grid" id="bjSeatBtns"></div>`;
+  document.getElementById('bjControls')||document.querySelector('.bj-controls').appendChild(div);
+  document.querySelector('.bj-controls').appendChild(div);
+  const grid=div.querySelector('#bjSeatBtns');
+  bjState.avail.forEach(sn=>{
+    const b=document.createElement('button');b.className='bj-seat-btn';b.textContent=`${sn}番席`;
+    b.onclick=()=>bjPickSeat(pl,sn);grid.appendChild(b);
+  });
+}
+function bjPickSeat(pl,sn){
+  bjState.assigned[sn]=pl.name;
+  bjState.avail=bjState.avail.filter(n=>n!==sn);
+  bjState.currentPicker++;
+  fillSeatAll(sn,pl.name,false);
+  const done=Object.keys(bjState.assigned).length;
+  document.getElementById('bjProgressFill').style.width=(done/_ss.length*100)+'%';
+  document.getElementById('bjProgressText').textContent=`${done} / ${_ss.length} 席 確定`;
+  const old=document.getElementById('bjSeatPicker');if(old)old.remove();
+  renderBjRankList();
+  setTimeout(bjNextPicker,400);
+}
+function renderBjPlayers(){
+  const c=document.getElementById('bjPlayers');c.innerHTML='';
+  bjState.players.forEach((pl,i)=>{
+    const div=document.createElement('div');
+    let cls='bj-player';
+    if(bjState.phase==='playing'&&i===bjState.currentActor)cls+=' active-player';
+    else if(pl.bust)cls+=' bust';
+    else if(pl.standing)cls+=' standing';
+    div.className=cls;
+    const cards=pl.cards.map(c=>`<div class="bj-card${c.red?' red':''}">${c.val}${c.suit}</div>`).join('');
+    div.innerHTML=`<div class="bj-player-name">${pl.name}</div><div class="bj-cards">${cards}</div><div class="bj-score">${pl.bust?'BUST':pl.score||'—'}</div><div class="bj-tag">${pl.bust?'バースト':pl.standing?'STAND':'—'}</div>`;
+    c.appendChild(div);
+  });
+}
+function renderBjRankList(){
+  const c=document.getElementById('bjRankList');c.innerHTML='';
+  bjState.pickOrder.forEach((pl,i)=>{
+    const sn=Object.entries(bjState.assigned).find(([,n])=>n===pl.name)?.[0];
+    const div=document.createElement('div');div.className='queue-item '+(sn?'done':'current');
+    div.innerHTML=`<span class="q-num">${i+1}</span><span class="q-name">${pl.name}</span><span class="q-seat">${pl.bust?'BUST':pl.score}点${sn?` → ${sn}番`:''}</span>`;
+    c.appendChild(div);
+  });
+}
+
+// ─── QUEUE HELPERS FOR MODES ───
+function buildModeQueue(listId,nowId,fixed,ordered){
+  const list=document.getElementById(listId);if(!list)return;list.innerHTML='';
+  Object.entries(fixed).forEach(([s,n])=>{
+    const d=document.createElement('div');d.className='queue-item done';
+    d.style.cssText='background:rgba(64,224,128,0.08);border-color:rgba(64,224,128,0.3);';
+    d.innerHTML=`<span class="q-num" style="background:rgba(64,224,128,0.3);color:var(--fixed);">★</span><span class="q-name">${n}</span><span class="q-seat">${s}番</span>`;
+    list.appendChild(d);
+  });
+  ordered.forEach((name,i)=>{
+    const d=document.createElement('div');d.className='queue-item pending';d.id=`${listId}-${i}`;
+    d.innerHTML=`<span class="q-num">${i+1}</span><span class="q-name">${name}</span><span class="q-seat" id="${listId}-seat-${i}"></span>`;
+    list.appendChild(d);
+  });
+}
+function updateModeQueue(listId,nowId,ordered,idx,assigned,fixed){
+  ordered.forEach((name,i)=>{
+    const el=document.getElementById(`${listId}-${i}`);if(!el)return;
+    el.className='queue-item '+(i<idx?'done':i===idx?'current':'pending');
+    const sn=Object.entries(assigned).find(([,n])=>n===name)?.[0];
+    const se=document.getElementById(`${listId}-seat-${i}`);
+    if(se&&sn)se.textContent=`${sn}番`;
+  });
+  const nowEl=document.getElementById(nowId);if(!nowEl)return;
+  if(idx>=ordered.length){nowEl.innerHTML='🎉 全員確定！';return;}
+  nowEl.innerHTML=`今のターン：<span>${ordered[idx]}</span>`;
+  const cur=document.getElementById(`${listId}-${idx}`);
+  if(cur)cur.scrollIntoView({block:'nearest',behavior:'smooth'});
 }
 function drawWheel(hi=-1){
   const cv=document.getElementById('wheelCanvas'),ctx=cv.getContext('2d');
